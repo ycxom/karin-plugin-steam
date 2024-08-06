@@ -1,6 +1,7 @@
 import { plugin, segment } from 'node-karin';
-import { readData, writeData, fetchSteamStatus } from '../lib/scrapeSteam.js';
+import { readData, fetchSteamStatus } from '../lib/scrapeSteam.js';
 import { generateSteamUI } from '../lib/generateSteamUI.js';
+import { joinGroupSteam, leaveGroupSteam, queryGroupSteam } from '../lib/groupSteam.js';
 
 export class SteamStatusPlugin extends plugin {
   constructor() {
@@ -18,60 +19,52 @@ export class SteamStatusPlugin extends plugin {
           fnc: 'leaveSteamGroup'
         },
         {
-          reg: /^#查看群聊里的steam$/,
-          fnc: 'queryGroupSteam'
+          reg: /^#查看群聊steam$/,
+          fnc: 'querySteamGroup'
         }
       ]
     });
   }
 
   async joinSteamGroup(e) {
-    const qqId = String(e.user_id); // 确保 qqId 是字符串
+    const qq = e.sender.user_id;
     const groupId = String(e.group_id); // 确保 groupId 是字符串
     const data = readData();
 
-    if (!data[qqId] || !data[qqId].steamId) {
+    if (!data[qq]) {
       this.reply('请先绑定 Steam 账号，再加入群聊。');
       return;
     }
 
-    if (!data.groups) {
-      data.groups = {};
+    try {
+      const result = await joinGroupSteam(data[qq], groupId);
+      this.reply(result);
+    } catch (error) {
+      this.reply('加入群聊失败，请稍后再试。');
+      console.error('Error joining Steam group:', error);
     }
-
-    if (!data.groups[groupId]) {
-      data.groups[groupId] = [];
-    }
-
-    if (!data.groups[groupId].includes(data[qqId].steamId)) {
-      data.groups[groupId].push(data[qqId].steamId);
-    }
-
-    writeData(data);
-    this.reply('成功加入 Steam 群聊。');
   }
 
   async leaveSteamGroup(e) {
-    const qqId = String(e.user_id); // 确保 qqId 是字符串
+    const qq = e.sender.user_id;
     const groupId = String(e.group_id); // 确保 groupId 是字符串
     const data = readData();
 
-    if (!data.groups || !data.groups[groupId]) {
-      this.reply('您尚未加入该群聊。');
+    if (!data[qq]) {
+      this.reply('您尚未绑定 Steam 账号。');
       return;
     }
 
-    const index = data.groups[groupId].indexOf(data[qqId].steamId);
-    if (index > -1) {
-      data.groups[groupId].splice(index, 1);
-      writeData(data);
-      this.reply('成功退出 Steam 群聊。');
-    } else {
-      this.reply('您尚未加入该群聊。');
+    try {
+      const result = await leaveGroupSteam(data[qq], groupId);
+      this.reply(result);
+    } catch (error) {
+      this.reply('退出群聊失败，请稍后再试。');
+      console.error('Error leaving Steam group:', error);
     }
   }
 
-  async queryGroupSteam(e) {
+  async querySteamGroup(e) {
     const groupId = String(e.group_id); // 确保 groupId 是字符串
     const data = readData();
 

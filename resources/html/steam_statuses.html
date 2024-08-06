@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      background-color: rgb(29, 31, 36); 
+      color: white; 
+    }
+    .container { max-width: 800px; margin: auto; padding: 20px; }
+    .friend { 
+      border: 1px solid #ddd; 
+      padding: 10px; 
+      margin-bottom: 10px; 
+      display: flex; 
+      align-items: center; 
+      background-color: rgb(29, 31, 36);
+      position: relative;
+    }
+    .avatar-frame { 
+      position: relative; 
+      width: 64px; 
+      height: 64px; 
+      margin-right: 20px; 
+    }
+    .avatar-frame img.frame { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+    }
+    .avatar-frame img.avatar { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+    }
+    .avatar-frame.offline::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .details { flex: 1; }
+    .name.in-game { color: rgb(225, 253, 192); }
+    .game-name { color: rgb(144, 193, 87); }
+    .name.online { color: rgb(109, 207, 246); }
+    .status.online { color: rgb(76, 145, 172); }
+    .name.offline { color: rgb(159, 159, 159); }
+    .status.offline { color: rgb(110, 110, 110); }
+    h2 { color: white; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>游戏中</h2>
+    {{#each inGameFriends}}
+    <div class="friend">
+      <div class="avatar-frame {{this.profileStatusClass}}">
+        {{#if this.frameImg}}
+        <img class="frame" src="{{this.frameImg}}" alt="Frame">
+        {{/if}}
+        <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+      </div>
+      <div class="details">
+        <div class="name {{this.profileStatusClass}}">{{this.actualPersonaName}}</div>
+        <div class="status {{this.profileStatusClass}}">
+          {{this.profileStatus}}
+          {{#if this.profileInGameName}}
+          <div class="game-name">{{this.profileInGameName}}</div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+    
+    <h2>在线</h2>
+    {{#each onlineFriends}}
+    <div class="friend">
+      <div class="avatar-frame {{this.profileStatusClass}}">
+        {{#if this.frameImg}}
+        <img class="frame" src="{{this.frameImg}}" alt="Frame">
+        {{/if}}
+        <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+      </div>
+      <div class="details">
+        <div class="name {{this.profileStatusClass}}">{{this.actualPersonaName}}</div>
+        <div class="status {{this.profileStatusClass}}">
+          {{this.profileStatus}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+    
+    <h2>离线</h2>
+    {{#each offlineFriends}}
+    <div class="friend">
+      <div class="avatar-frame {{this.profileStatusClass}}">
+        {{#if this.frameImg}}
+        <img class="frame" src="{{this.frameImg}}" alt="Frame">
+        {{/if}}
+        <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+      </div>
+      <div class="details">
+        <div class="name {{this.profileStatusClass}}">{{this.actualPersonaName}}</div>
+        <div class="status {{this.profileStatusClass}}">
+          {{this.profileStatus}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</body>
+</html>

@@ -8,6 +8,7 @@
         "cheerio": "^1.0.0-rc.10",
         "https-proxy-agent": "^5.0.0",
         "yaml": "^2.0.0",
-        "puppeteer": "^10.4.0"
+        "puppeteer": "^10.4.0",
+        "handlebars": "^4.7.7"
     }
-  }
+}

@@ -24,7 +24,11 @@ export class SteamStatusPlugin extends plugin {
         {
           reg: /^#查询[S|s]team好友 (.+)$/,
           fnc: 'querySteamFriends'
-        }       
+        },
+        {
+          reg: /^#查看我的[S|s]team好友$/,
+          fnc: 'queryMySteamFriends'
+        }      
       ]
     });
   }
@@ -111,6 +115,26 @@ export class SteamStatusPlugin extends plugin {
       }
     } catch (error) {
       console.error('Error querying steam friends:', error);
+      this.reply('查询失败，请稍后再试');
+    }
+  }
+  async queryMySteamFriends(e) {
+    const qq = e.sender.user_id;
+    const data = readData();
+    const steamID = data[qq];
+    if (!steamID) {
+      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码');
+      return;
+    }
+    try {
+      const result = await screenshotSteamFriends(steamID);
+      if (result.error) {
+        this.reply(result.error);
+      } else if (result.image) {
+        this.reply(segment.image(`base64://${result.image}`));
+      }
+    } catch (error) {
+      console.error('Error querying my Steam friends:', error);
       this.reply('查询失败，请稍后再试');
     }
   }

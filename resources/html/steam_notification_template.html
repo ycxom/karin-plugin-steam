@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Steam Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1b2838;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .friend { 
+            border: 1px solid #ddd; 
+            padding: 10px; 
+            margin-bottom: 10px; 
+            display: flex; 
+            align-items: center; 
+            background-color: rgb(29, 31, 36);
+            position: relative;
+        }
+        .notification {
+            background-color: #2a475e;
+            border: 1px solid #66c0f4;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .notification img {
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+        .notification .content {
+            display: flex;
+            align-items: center;
+        }
+        .notification .content .text {
+            display: flex;
+            flex-direction: column;
+        }
+        .notification .content .text .title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .notification .content .text .game {
+            color: #66c0f4;
+        }
+        .avatar-container {
+            position: relative;
+        }
+        .avatar-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 64px;
+            height: 64px;
+        }   
+        .avatar-frame img.frame { 
+            position: absolute; 
+            top: -4px; /* 调整顶部位置 */
+            left: -4px; /* 调整左侧位置 */
+            width: calc(100% + 8px); /* 调整宽度 */
+            height: calc(100% + 8px); /* 调整高度 */
+            z-index: 2; 
+        }
+        
+    </style>
+</head>
+<body>
+    {{#each notifications}}
+    <div class="notification">
+        <div class="content">
+            <div class="avatar-container">
+                {{#if this.frameImg}}
+                <img src="{{this.frameImg}}" alt="Avatar Frame" class="avatar-frame">
+                {{/if}}
+                <img src="{{this.playerAvatarImg}}" alt="Avatar" width="64" height="64">
+  
+            </div>
+            <div class="text">
+                <div class="title">{{this.actualPersonaName}}</div>
+                <div class="status">{{this.profileStatus}}</div>
+                {{#if this.profileInGameName}}
+                <div class="game">当前正在玩: {{this.profileInGameName}}</div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</body>
+</html>

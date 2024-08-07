@@ -38,7 +38,7 @@ export class SteamBroadcastPlugin extends plugin {
     if (!data.groups[groupId]) {
       data.groups[groupId] = { steamIds: [], enabled: true };
     } else if (data.groups[groupId].enabled) {
-      this.reply(e, `群聊 ${groupId} 已经启动了 Steam 播报`);
+      this.reply(`群聊 ${groupId} 已经启动了 Steam 播报`);
       logger.log(`[startSteamBroadcast] 群聊 ${groupId} 已经启动了 Steam 播报`);
       return;
     } else {
@@ -47,7 +47,7 @@ export class SteamBroadcastPlugin extends plugin {
     writeData(data);
 
     startMonitoring(this); // 传递插件实例给监控函数
-    this.reply(e, `群聊 ${groupId} 的 Steam 播报已启动`);
+    this.reply(`群聊 ${groupId} 的 Steam 播报已启动`);
     logger.log(`[startSteamBroadcast] 群聊 ${groupId} 的 Steam 播报已启动`);
   }
 
@@ -57,7 +57,7 @@ export class SteamBroadcastPlugin extends plugin {
     const data = readData();
 
     if (!data.groups || !data.groups[groupId]) {
-      this.reply(e, `群聊 ${groupId} 中没有绑定任何 Steam ID`);
+      this.reply(`群聊 ${groupId} 中没有绑定任何 Steam ID`);
       logger.log(`[stopSteamBroadcast] 群聊 ${groupId} 中没有绑定任何 Steam ID`);
       return;
     }
@@ -65,8 +65,8 @@ export class SteamBroadcastPlugin extends plugin {
     data.groups[groupId].enabled = false;
     writeData(data);
 
-    stopMonitoring();
-    this.reply(e, `群聊 ${groupId} 的 Steam 播报已关闭`);
+    //stopMonitoring();
+    this.reply(`群聊 ${groupId} 的 Steam 播报已关闭`);
     logger.log(`[stopSteamBroadcast] 群聊 ${groupId} 的 Steam 播报已关闭`);
   }
 

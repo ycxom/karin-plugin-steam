@@ -31,6 +31,10 @@ export class SteamStatusPlugin extends plugin {
     const groupId = String(e.group_id); // 确保 groupId 是字符串
     const data = readData();
 
+    if (!data.groups) {
+      data.groups = {}; // 确保 groups 属性存在
+    }
+
     if (!data[qq]) {
       this.reply('请先绑定 Steam 账号，再加入群聊。');
       return;
@@ -49,6 +53,10 @@ export class SteamStatusPlugin extends plugin {
     const qq = e.sender.user_id;
     const groupId = String(e.group_id); // 确保 groupId 是字符串
     const data = readData();
+
+    if (!data.groups) {
+      data.groups = {}; // 确保 groups 属性存在
+    }
 
     if (!data[qq]) {
       this.reply('您尚未绑定 Steam 账号。');

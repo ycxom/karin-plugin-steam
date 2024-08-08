@@ -107,7 +107,7 @@ export class SteamBroadcastPlugin extends plugin {
       if (data.groups) {
         for (const groupId in data.groups) {
           if (data.groups[groupId].enabled) {
-            logger.log(`[onLoad] 启动群聊 ${groupId} 的 Steam 播报`);
+            logger.debug(`[onLoad] 启动群聊 ${groupId} 的 Steam 播报`);
             startMonitoring(this); // 传递插件实例给监控函数
           }
         }

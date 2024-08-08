@@ -2,3 +2,4 @@ proxy: 'http://127.0.0.1:10809'  #填写代理地址
 steamApiKey: ''   #填写Steam APi Key
 qq: ''  #填写发送通知消息的qq
 steamBroadcastEnabled: true #监听模式开关
+interval: 40000  #查询监听延迟，越低越快更新，注意过快会消耗服务器流量资源，和导致被steam封ip

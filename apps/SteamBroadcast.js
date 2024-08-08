@@ -1,10 +1,6 @@
 import { plugin ,logger } from 'node-karin';
 import { startMonitoring, stopMonitoring } from '../lib/steamMonitor.js';
-import fs from 'fs';
-import yaml from 'yaml';
-import Config from '../lib/config.js';
-
-const DATA_FILE = `${Config.dirPath}/config/config/data.yaml`;
+import { readData, writeData, readConfig, writeConfig } from '../lib/scrapeSteam.js';
 
 export class SteamBroadcastPlugin extends plugin {
   constructor() {
@@ -14,12 +10,24 @@ export class SteamBroadcastPlugin extends plugin {
       priority: 1000,
       rule: [
         {
-          reg: /^#启动steam播报$/,
-          fnc: 'startSteamBroadcast'
+          reg: /^#启动[S|s]team播报$/,
+          fnc: 'startSteamBroadcast',
+          permission: 'admin'
         },
         {
-          reg: /^#关闭steam播报$/,
-          fnc: 'stopSteamBroadcast'
+          reg: /^#关闭[S|s]team播报$/,
+          fnc: 'stopSteamBroadcast',
+          permission: 'admin'
+        },
+        {
+          reg: /^#启动[S|s]team播报功能$/,
+          fnc: 'enableSteamBroadcastFeature',
+          permission: 'master'
+        },
+        {
+          reg: /^#关闭[S|s]team播报功能$/,
+          fnc: 'disableSteamBroadcastFeature',
+          permission: 'master'
         }
       ]
     });
@@ -46,7 +54,6 @@ export class SteamBroadcastPlugin extends plugin {
     }
     writeData(data);
 
-    startMonitoring(this); // 传递插件实例给监控函数
     this.reply(`群聊 ${groupId} 的 Steam 播报已启动`);
     logger.log(`[startSteamBroadcast] 群聊 ${groupId} 的 Steam 播报已启动`);
   }
@@ -65,36 +72,48 @@ export class SteamBroadcastPlugin extends plugin {
     data.groups[groupId].enabled = false;
     writeData(data);
 
-    //stopMonitoring();
     this.reply(`群聊 ${groupId} 的 Steam 播报已关闭`);
     logger.log(`[stopSteamBroadcast] 群聊 ${groupId} 的 Steam 播报已关闭`);
   }
 
+  async enableSteamBroadcastFeature() {
+    const config = readConfig();
+    config.steamBroadcastEnabled = true;
+    writeConfig(config);
+
+    this.reply(`Steam 播报功能已启用`);
+    logger.log(`[enableSteamBroadcastFeature] Steam 播报功能已启用`);
+
+    // 启动监听
+    startMonitoring(this);
+  }
+
+  async disableSteamBroadcastFeature() {
+    const config = readConfig();
+    config.steamBroadcastEnabled = false;
+    writeConfig(config);
+
+    this.reply(`Steam 播报功能已关闭`);
+    logger.log(`[disableSteamBroadcastFeature] Steam 播报功能已关闭`);
+
+    // 停止监听
+    stopMonitoring();
+  }
+
   async onLoad() {
-    const data = readData();
-    if (data.groups) {
-      for (const groupId in data.groups) {
-        if (data.groups[groupId].enabled) {
-          logger.log(`[onLoad] 启动群聊 ${groupId} 的 Steam 播报`);
-          startMonitoring(this); // 传递插件实例给监控函数
+    const config = readConfig();
+    if (config.steamBroadcastEnabled) {
+      const data = readData();
+      if (data.groups) {
+        for (const groupId in data.groups) {
+          if (data.groups[groupId].enabled) {
+            logger.log(`[onLoad] 启动群聊 ${groupId} 的 Steam 播报`);
+            startMonitoring(this); // 传递插件实例给监控函数
+          }
         }
       }
     }
   }
 }
 
-function readData() {
-  if (fs.existsSync(DATA_FILE)) {
-    const fileContents = fs.readFileSync(DATA_FILE, 'utf8');
-    return yaml.parse(fileContents);
-  }
-  return {};
-}
-
-function writeData(data) {
-  const yamlStr = yaml.stringify(data);
-  fs.writeFileSync(DATA_FILE, yamlStr, 'utf8');
-}
-
 export default new SteamBroadcastPlugin();
-export { readData, writeData };

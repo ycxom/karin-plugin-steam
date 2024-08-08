@@ -11,15 +11,15 @@ export class SteamStatusPlugin extends plugin {
       priority: 1000,
       rule: [
         {
-          reg: /^#steam加入群聊$/,
+          reg: /^#[S|s]team加入群聊$/,
           fnc: 'joinSteamGroup'
         },
         {
-          reg: /^#steam退出群聊$/,
+          reg: /^#[S|s]team退出群聊$/,
           fnc: 'leaveSteamGroup'
         },
         {
-          reg: /^#查看群聊steam$/,
+          reg: /^#查看群聊[S|s]team$/,
           fnc: 'querySteamGroup'
         }
       ]

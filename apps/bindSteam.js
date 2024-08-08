@@ -1,5 +1,5 @@
 import { plugin } from 'node-karin';
-import { readData, writeData, getSteamIDFromFriendCode } from '../lib/scrapeSteam.js';
+import { readData, writeData, getSteamIDFromFriendCode, convertFriendCodeToSteamID64 } from '../lib/scrapeSteam.js';
 
 export class SteamBindPlugin extends plugin {
   constructor() {
@@ -21,14 +21,17 @@ export class SteamBindPlugin extends plugin {
   }
 
   async bindSteamAccount(e) {
-    const friendCode = e.msg.replace(/^#绑定[S|s]team /, '').trim();
+    const input = e.msg.replace(/^#绑定[S|s]team /, '').trim();
     const qq = e.sender.user_id;
     
     try {
-      let steamID = friendCode;
-      if (!/^\d{17}$/.test(friendCode)) {
-        steamID = await getSteamIDFromFriendCode(friendCode);
+      let steamID = input;
+      if (/^\d{10}$/.test(input)) {
+        steamID = convertFriendCodeToSteamID64(input);
+      } else if (!/^\d{17}$/.test(input)) {
+        steamID = await getSteamIDFromFriendCode(input);
       }
+
       let data = readData();
       if (!data) {
         data = {};
@@ -38,7 +41,7 @@ export class SteamBindPlugin extends plugin {
 
       this.reply(`绑定成功：QQ ${qq} -> SteamID ${steamID}`);
     } catch (error) {
-      this.reply('绑定失败，请确认好友代码正确后重试');
+      this.reply('绑定失败，请确认好友代码/steamid/自定义URL正确后重试');
       console.error('Error binding Steam account:', error);
     }
   }

@@ -60,9 +60,18 @@
             position: absolute; 
             top: -4px; /* 调整顶部位置 */
             left: -4px; /* 调整左侧位置 */
-            width: calc(100% + 8px); /* 调整宽度 */
-            height: calc(100% + 8px); /* 调整高度 */
+            width: calc(100% + 9px); /* 调整宽度 */
+            height: calc(100% + 9px); /* 调整高度 */
             z-index: 2; 
+        }
+        .offline-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 64px;
+            height: 64px;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 3;
         }
         
     </style>
@@ -72,6 +81,9 @@
     <div class="notification">
         <div class="content">
             <div class="avatar-container">
+                {{#if (eq this.profileStatusClass "offline")}}
+                <div class="offline-overlay"></div>
+                {{/if}}
                 {{#if this.frameImg}}
                 <img src="{{this.frameImg}}" alt="Avatar Frame" class="avatar-frame">
                 {{/if}}
@@ -82,7 +94,7 @@
                 <div class="title">{{this.actualPersonaName}}</div>
                 <div class="status">{{this.profileStatus}}</div>
                 {{#if this.profileInGameName}}
-                <div class="game">当前正在玩: {{this.profileInGameName}}</div>
+                <div class="game">{{this.profileInGameName}}</div>
                 {{/if}}
             </div>
         </div>

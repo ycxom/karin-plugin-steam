@@ -56,7 +56,7 @@ export class SteamStatusPlugin extends plugin {
     const data = readData();
     const steamID = data[qq];
     if (!steamID) {
-      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码');
+      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
       return;
     }
     try {
@@ -123,7 +123,7 @@ export class SteamStatusPlugin extends plugin {
     const data = readData();
     const steamID = data[qq];
     if (!steamID) {
-      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码');
+      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
       return;
     }
     try {

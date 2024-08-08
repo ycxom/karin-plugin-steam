@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam插件菜单</title>
+    <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css" />
+    <style>
+        body {
+            font-family: 'LXGW WenKai', sans-serif;
+            background: url('https://www.loliapi.com/acg/pe/') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 20px;
+            font-size: 2em;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .menu-item {
+            background: rgba(128, 128, 128, 0.6); /* 设置透明灰色 */
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            width: 200px;
+            transition: background 0.3s, transform 0.3s;
+            backdrop-filter: blur(5px); /* 添加虚化效果 */
+        }
+        .menu-item:hover {
+            background: rgba(128, 128, 128, 0.8); /* 鼠标悬停时更改透明度 */
+            transform: scale(1.05);
+        }
+        .menu-item a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .usage {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        footer {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            color: rgb(253, 231, 130);
+        }
+        .highlight {
+            color: rgb(255, 255, 255);
+        }
+    </style>
+</head>
+<body>
+    <header>Steam插件菜单</header>
+    <div class="menu">
+        <div class="menu-item">
+            <div>绑定Steam账号</div>
+            <div class="usage">#绑定Steam [好友代码/SteamID/自定义URL]</div>
+        </div>
+        <div class="menu-item">
+            <div>解绑Steam账号</div>
+            <div class="usage">#解绑Steam</div>
+        </div>
+        <div class="menu-item">
+            <div>加入Steam群聊</div>
+            <div class="usage">#Steam加入群聊</div>
+        </div>
+        <div class="menu-item">
+            <div>退出Steam群聊</div>
+            <div class="usage">#Steam退出群聊</div>
+        </div>
+        <div class="menu-item">
+            <div>查看Steam状态</div>
+            <div class="usage">#查询Steam [好友代码/SteamID/自定义URL]</div>
+        </div>
+        <div class="menu-item">
+            <div>查看Steam好友</div>
+            <div class="usage">#查询Steam好友 [好友代码/SteamID/自定义URL]</div>
+        </div>
+        <div class="menu-item">
+            <div>查看我的Steam</div>
+            <div class="usage">#查看我的Steam</div>
+        </div>
+        <div class="menu-item">
+            <div>查看我的Steam好友</div>
+            <div class="usage">#查看我的Steam好友</div>
+        </div>
+    </div>
+    <div class="menu">
+        <div class="menu-item">
+            <div>启动Steam播报</div>
+            <div class="usage">#启动Steam播报<br>权限: admin</div>
+        </div>
+        <div class="menu-item">
+            <div>关闭Steam播报</div>
+            <div class="usage">#关闭Steam播报<br>权限: admin</div>
+        </div>
+        <div class="menu-item">
+            <div>启动Steam播报功能</div>
+            <div class="usage">#启动Steam播报功能<br>权限: master</div>
+        </div>
+        <div class="menu-item">
+            <div>关闭Steam播报功能</div>
+            <div class="usage">#关闭Steam播报功能<br>权限: master</div>
+        </div>
+    </div>
+    <footer>Karin<span class="highlight"> & </span>Karin-plugin-steam</footer>
+</body>
+</html>

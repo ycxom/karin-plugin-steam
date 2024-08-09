@@ -1,5 +1,19 @@
-proxy: 'http://127.0.0.1:10809'  #填写代理地址
-steamApiKey: ''   #填写Steam APi Key
-qq: ''  #填写发送通知消息的qq
-steamBroadcastEnabled: true #监听模式开关
-interval: 40000  #查询监听延迟，越低越快更新，注意过快会消耗服务器流量资源，和导致被steam封ip
+#填写代理地址
+proxy: 'http://127.0.0.1:10809'
+
+#填写Steam APi Key
+steamApiKey: ''
+
+#填写发送通知消息的qq
+qq: ''
+
+#监听模式开关
+steamBroadcastEnabled: true 
+
+#查询监听延迟，越低越快更新，注意过快会消耗服务器流量资源，和导致被steam封ip
+interval: 40000  
+
+#监听模式
+fetchSteamStatus: 'html'  
+#支持使用 HTML爬取数据，xml爬取，降低流量消耗，api使用官方api爬取
+# 建议使用api模式

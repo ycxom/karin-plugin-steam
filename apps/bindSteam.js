@@ -1,5 +1,6 @@
 import { plugin } from 'node-karin';
-import { readData, writeData, getSteamIDFromFriendCode, convertFriendCodeToSteamID64 } from '../lib/scrapeSteam.js';
+import { readData, writeData } from '../lib/main/readwritefile.js';
+import { getSteamIDFromFriendCode, convertFriendCodeToSteamID64 } from '../lib/main/FriendCode.js';
 
 export class SteamBindPlugin extends plugin {
   constructor() {

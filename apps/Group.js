@@ -1,7 +1,8 @@
 import { plugin, segment } from 'node-karin';
-import { readData, fetchSteamStatus } from '../lib/scrapeSteam.js';
-import { generateSteamUI } from '../lib/generateSteamUI.js';
-import { joinGroupSteam, leaveGroupSteam, queryGroupSteam } from '../lib/groupSteam.js';
+import { readData } from '../lib/main/readwritefile.js';
+import {  fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
+import { generateSteamUI } from '../lib/common/generateSteamUI.js';
+import { joinGroupSteam, leaveGroupSteam, queryGroupSteam } from '../lib/main/groupSteam.js';
 
 export class SteamStatusPlugin extends plugin {
   constructor() {

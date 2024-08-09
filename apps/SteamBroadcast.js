@@ -1,6 +1,6 @@
 import { plugin ,logger } from 'node-karin';
-import { startMonitoring, stopMonitoring } from '../lib/steamMonitor.js';
-import { readData, writeData, readConfig, writeConfig } from '../lib/scrapeSteam.js';
+import { startMonitoring } from '../lib/monitor/monitorSteamStatus.js';
+import { readData, writeData, readConfig, writeConfig } from '../lib/main/readwritefile.js';
 
 export class SteamBroadcastPlugin extends plugin {
   constructor() {
@@ -103,17 +103,11 @@ export class SteamBroadcastPlugin extends plugin {
   async onLoad() {
     const config = readConfig();
     if (config.steamBroadcastEnabled) {
-      const data = readData();
-      if (data.groups) {
-        for (const groupId in data.groups) {
-          if (data.groups[groupId].enabled) {
-            logger.debug(`[onLoad] 启动群聊 ${groupId} 的 Steam 播报`);
-            startMonitoring(this); // 传递插件实例给监控函数
-          }
-        }
-      }
+        logger.debug(`[onLoad] 启动全局 Steam 播报监控`);
+        startMonitoring(); // 启动全局监控任务
     }
-  }
+}
+
 }
 
 export default new SteamBroadcastPlugin();

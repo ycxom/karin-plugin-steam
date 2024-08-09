@@ -1,5 +1,5 @@
 import { plugin, segment } from 'node-karin';
-import { serveBase64ImageForHelp } from '../lib/screenshot.js';
+import { serveBase64ImageForHelp } from '../lib/common/screenshot.js';
 
 export class SteamStatusPlugin extends plugin {
   constructor() {

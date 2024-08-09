@@ -1,6 +1,7 @@
 import { plugin, segment } from 'node-karin';
-import { readData, fetchSteamStatus } from '../lib/scrapeSteam.js';
-import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/screenshot.js';
+import { readData } from '../lib/main/readwritefile.js';
+import {  fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
+import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js';
 
 export class SteamStatusPlugin extends plugin {
   constructor() {

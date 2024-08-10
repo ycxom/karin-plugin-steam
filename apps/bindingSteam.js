@@ -19,10 +19,6 @@ export class SteamStatusPlugin extends plugin {
           fnc: 'queryMySteam'
         },
         {
-          reg: /^#查看(?:\[at:(\d+)\]|(\d+))的steam$/,
-          fnc: 'queryOtherSteam'
-        },
-        {
           reg: /^#查询[S|s]team好友 (.+)$/,
           fnc: 'querySteamFriends'
         },
@@ -76,34 +72,6 @@ export class SteamStatusPlugin extends plugin {
     }
   }
 
-  async queryOtherSteam(e) {
-    const match = e.msg.match(/^#查看(?:\[at:(\d+)\]|(\d+))的steam$/);
-    if (!match) {
-      this.reply('命令格式错误。');
-      return;
-    }
-    const qq = match[1] || match[2];
-    const data = readData();
-    const steamID = data[qq];
-    if (!steamID) {
-      this.reply(`QQ号 ${qq} 未绑定Steam账号。`);
-      return;
-    }
-    try {
-      const status = await fetchSteamStatus(steamID);
-      const result = await screenshotSteamProfile(steamID);
-      if (result.error) {
-        this.reply(result.error);
-      } else if (result.image) {
-        this.reply(segment.image(`base64://${result.image}`));
-      } else {
-        this.reply(formatSteamStatus(status));
-      }
-    } catch (error) {
-      this.reply('查询失败，请稍后再试');
-      console.error('Error querying other Steam status:', error);
-    }
-  }
 
   async querySteamFriends(e) {
     const playerIdentifier = e.msg.replace(/^#查询[S|s]team好友 /, '').trim();

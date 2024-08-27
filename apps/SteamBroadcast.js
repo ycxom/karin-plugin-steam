@@ -1,5 +1,5 @@
 import { plugin ,logger } from 'node-karin';
-import { startMonitoring } from '../lib/monitor/monitorSteamStatus.js';
+import { startMonitoring, stopMonitoring } from '../lib/monitor/monitorSteamStatus.js';
 import { readData, writeData, readConfig, writeConfig } from '../lib/main/readwritefile.js';
 
 export class SteamBroadcastPlugin extends plugin {

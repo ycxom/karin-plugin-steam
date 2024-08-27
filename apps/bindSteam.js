@@ -10,7 +10,7 @@ export class SteamBindPlugin extends plugin {
       priority: 1000,
       rule: [
         {
-          reg: /^#绑定[S|s]team (.+)$/,
+          reg: /^#绑定[S|s]team\s+(.+)$/,
           fnc: 'bindSteamAccount'
         },
         {
@@ -22,7 +22,7 @@ export class SteamBindPlugin extends plugin {
   }
 
   async bindSteamAccount(e) {
-    const input = e.msg.replace(/^#绑定[S|s]team /, '').trim();
+    const input = e.msg.replace(/^#绑定[S|s]team\s+/, '').trim();
     const qq = e.sender.user_id;
     
     try {

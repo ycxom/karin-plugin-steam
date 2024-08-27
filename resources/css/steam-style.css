@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1b2838;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
+.header {
+    font-size: 20px;
+    color: #c7d5e0;
+    margin-bottom: 20px;
+}
+.freebie {
+    background-color: #2a475e;
+    border: 1px solid #66c0f4;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+.freebie img {
+    max-width: 100px;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+.freebie .title {
+    font-size: 18px;
+    color: #E0FCC0;
+    margin-bottom: 10px;
+}
+.freebie .info {
+    margin-bottom: 10px;
+    color: #c7d5e0;
+}
+.freebie .link {
+    color: #66c0f4;
+    text-decoration: none;
+}
+.freebie .link:hover {
+    text-decoration: underline;
+}

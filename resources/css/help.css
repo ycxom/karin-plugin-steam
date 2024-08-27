@@ -1,0 +1,53 @@
+body {
+    font-family: 'LXGW WenKai', sans-serif;
+    background: url('https://www.loliapi.com/acg/pe/') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+header {
+    padding: 20px;
+    font-size: 2em;
+    background: rgba(0, 0, 0, 0.5);
+}
+.menu {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+.menu-item {
+    background: rgba(128, 128, 128, 0.6); /* 设置透明灰色 */
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+    transition: background 0.3s, transform 0.3s;
+    backdrop-filter: blur(5px); /* 添加虚化效果 */
+}
+.menu-item:hover {
+    background: rgba(128, 128, 128, 0.8); /* 鼠标悬停时更改透明度 */
+    transform: scale(1.05);
+}
+.menu-item a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+.usage {
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+footer {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: rgb(253, 231, 130);
+}
+.highlight {
+    color: rgb(255, 255, 255);
+}

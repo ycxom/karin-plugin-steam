@@ -3,7 +3,7 @@ import { readData } from '../lib/main/readwritefile.js';
 import {  fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
 import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js';
 
-export const queryUserSteam = karin.command(/^#查看steam$/, async (e) => {
+export const queryUserSteam = karin.command(/^#查看[S|s]team$/, async (e) => {
   
     /** 存在at */
     if (e.at.length) {
@@ -36,7 +36,7 @@ export const queryUserSteam = karin.command(/^#查看steam$/, async (e) => {
   },{ name: 'queryUserSteam', priority: '1000', permission: 'all'})
   
 
-  export const queryUserSteamFriends = karin.command(/^#查看steam好友$/, async (e) => {
+  export const queryUserSteamFriends = karin.command(/^#查看[S|s]team好友$/, async (e) => {
 
     /** 存在at */
     if (e.at.length) {

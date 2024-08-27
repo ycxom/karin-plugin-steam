@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Steam Freebies</title>
+    <link rel="stylesheet" href="../css/steam-style.css">
+</head>
+<body>
+    {{#each freebies}}
+    <div class="freebie">
+        <div class="title">{{this.title}}</div>
+        <div class="info">
+            {{{this.description}}} <!-- 使用三重花括号来渲染 HTML 内容 -->
+        </div>
+    </div>
+    {{/each}}
+</body>
+</html>

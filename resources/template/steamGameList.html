@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Steam Game List</title>
+    <link rel="stylesheet" href="../css/steam-style.css">
+</head>
+<body>
+    <div class="header">该Steam拥有 {{gameCount}} 款游戏</div>
+    <div class="content">
+        {{#each freebies}}
+        <div class="freebie">
+            <img src="{{this.coverUrl}}" alt="封面图">
+            <div>
+                <div class="title">{{this.title}}</div>
+                <div class="info">
+                    {{{this.description}}} <!-- 使用三重花括号来渲染 HTML 内容 -->
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</body>
+</html>

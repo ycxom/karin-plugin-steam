@@ -5,7 +5,7 @@ import path from 'path';
 import Config from '../lib/config.js';
 
 
-const DATA_FILE = path.join(Config.dirPath, 'config/config/data.yaml');
+const DATA_FILE = path.join(Config.dirPath, 'data/data.yaml');
 
 /**
  * 更新 data.yaml 文件，将启动的群聊ID写入并设置状态
@@ -38,7 +38,7 @@ function updateGroupNotificationStatus(groupId, status) {
  * Command: #启动Steam喜加一播报
  */
 export const startSteamFreebiesBroadcast = karin.command(
-    /^#启动Steam喜加一播报$/,
+    /^#启动[S|s]team喜加一播报$/,
     async (e) => {
         try {
             const groupId = String(e.group_id); // 获取群聊ID
@@ -60,7 +60,7 @@ export const startSteamFreebiesBroadcast = karin.command(
  * Command: #关闭Steam喜加一播报
  */
 export const stopSteamFreebiesBroadcast = karin.command(
-    /^#关闭Steam喜加一播报$/,
+    /^#关闭[S|s]team喜加一播报$/,
     async (e) => {
         try {
             const groupId = String(e.group_id); // 获取群聊ID

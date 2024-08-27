@@ -16,7 +16,7 @@ export class SteamStatusPlugin extends plugin {
     });
   }
 
-  async showHelp(e) {
+  async showHelp() {
     try {
       const base64Image = await serveBase64ImageForHelp();
       this.reply(segment.image(`base64://${base64Image}`));

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Steam Notification</title>
+    <link rel="stylesheet" href="../css/notification.css">
+</head>
+
+<body>
+    {{#each notifications}}
+    <div class="notification">
+        <div class="content" style="position: relative;">
+            <!-- 背景图和虚化效果 -->
+            <div style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url('{{this.gamelogo}}');
+                background-size: cover;
+                background-blend-mode: darken;
+                filter: blur(1.5px);
+                z-index: 0;
+                border-radius: 5px;
+                ">
+            </div>
+            <!-- 头像和内容 -->
+            <div class="avatar-container" style="position: relative; z-index: 1;">
+
+                {{#if this.frameImg}}
+                <img class="imgframe" src="{{this.frameImg}}" alt="Avatar Frame">
+                {{/if}}
+                {{#if (or (eq this.profileStatusClass "offline") (eq this.profileStatusClass 0))}}
+                <div class="offline-overlay"></div>
+                {{/if}}
+                <img src="{{this.playerAvatarImg}}" alt="Avatar" width="64" height="64">
+            </div>
+            <div class="text">
+                <!-- 通用的 Title 和 Status 结构 -->
+                <div class="{{#if (or (eq this.profileStatusClass " online") (eq this.profileStatusClass
+                    1))}}title-online {{else if (eq this.profileStatusClass "in-game" )}}title {{else if (or (eq
+                    this.profileStatusClass "offline" ) (eq this.profileStatusClass 0))}}title-offline {{else if (eq
+                    this.profileStatusClass 2)}}title-busy {{else if (eq this.profileStatusClass 3)}}title-away {{else
+                    if (eq this.profileStatusClass 4)}}title-snooze {{else if (eq this.profileStatusClass
+                    5)}}title-trade {{else if (eq this.profileStatusClass 6)}}title-play {{else}}title-offline{{/if}}">
+                    <span>{{this.actualPersonaName}}</span>
+                </div>
+                <div class="small-gap"></div>
+                <div class="{{#if (or (eq this.profileStatusClass " online") (eq this.profileStatusClass
+                    1))}}status-online {{else if (eq this.profileStatusClass "in-game" )}}status {{else if (or (eq
+                    this.profileStatusClass "offline" ) (eq this.profileStatusClass 0))}}status-offline {{else if (eq
+                    this.profileStatusClass 2)}}status-busy {{else if (eq this.profileStatusClass 3)}}status-away {{else
+                    if (eq this.profileStatusClass 4)}}status-snooze {{else if (eq this.profileStatusClass
+                    5)}}status-trade {{else if (eq this.profileStatusClass 6)}}status-play
+                    {{else}}status-offline{{/if}}">
+                    <span>{{this.profileStatus}}</span>
+                </div>
+                {{#unless (or (eq this.profileStatusClass "offline") (eq this.profileStatusClass 0))}}
+                {{#if this.profileInGameName}}
+                <div class="small-gap"></div>
+                <div class="game"><span>{{this.profileInGameName}}</span></div>
+                {{/if}}
+                {{/unless}}
+            </div>
+
+        </div>
+    </div>
+    {{/each}}
+</body>
+
+</html>

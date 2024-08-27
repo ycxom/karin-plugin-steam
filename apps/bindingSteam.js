@@ -12,23 +12,23 @@ export class SteamStatusPlugin extends plugin {
       priority: 1000,
       rule: [
         {
-          reg: /^#查询[S|s]team\s+(.+)$/,
+          reg: /^#查询[Ss]team\s*(.+)$/,
           fnc: 'querySteamStatus'
         },
         {
-          reg: /^#查看我的[S|s]team$/,
+          reg: /^#查看我的[Ss]team$/,
           fnc: 'queryMySteam'
         },
         {
-          reg: /^#查询[S|s]team好友\s+(.+)$/,
+          reg: /^#查询[Ss]team好友\s*(.+)$/,
           fnc: 'querySteamFriends'
         },
         {
-          reg: /^#查看我的[S|s]team好友$/,
+          reg: /^#查看我的[Ss]team好友$/,
           fnc: 'queryMySteamFriends'
         },
         {
-          reg: /^#查看我的[S|s]team库存$/,
+          reg: /^#查看我的[Ss]team库存$/,
           fnc: 'queryMysteamLibraryCommand'
         }
       ]
@@ -36,7 +36,7 @@ export class SteamStatusPlugin extends plugin {
   }
 
   async querySteamStatus(e) {
-    const playerIdentifier = e.msg.replace(/^#查询[S|s]team\s+/, '').trim();
+    const playerIdentifier = e.msg.replace(/^#查询[Ss]team\s*/,'').trim();
     try {
       const status = await fetchSteamStatus(playerIdentifier);
       const result = await screenshotSteamProfile(playerIdentifier);
@@ -79,7 +79,7 @@ export class SteamStatusPlugin extends plugin {
 
 
   async querySteamFriends(e) {
-    const playerIdentifier = e.msg.replace(/^#查询[S|s]team好友\s+/, '').trim();
+    const playerIdentifier = e.msg.replace(/^#查询[Ss]team好友\s*/,'').trim();
     try {
       const result = await screenshotSteamFriends(playerIdentifier);
       if (result.error) {

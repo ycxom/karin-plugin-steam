@@ -5,9 +5,9 @@ import { initAppList, fetchSteamLibrary, renderGamesToBase64, scheduleDailyUpdat
 
 // 定义指令 #查询steam
 export const steamLibraryCommand = karin.command(
-    /^#查询[s|S]team库存\s+(.+)$/,
+    /^#查询[Ss]team库存\s*(.+)$/,
     async (e) => {
-        const playerIdentifier = e.msg.replace(/^#查询[s|S]team库存\s+/, '').trim();
+        const playerIdentifier = e.msg.replace(/^#查询[Ss]team库存\s*/, '').trim();
         logger.log(`[steamLibraryCommand] 收到指令 #查询Steam库存, 输入参数: ${playerIdentifier}`);
         
         try {

@@ -10,22 +10,22 @@ export class SteamBroadcastPlugin extends plugin {
       priority: 1000,
       rule: [
         {
-          reg: /^#启动[S|s]team播报$/,
+          reg: /^#启动[Ss]team播报$/,
           fnc: 'startSteamBroadcast',
           permission: 'admin'
         },
         {
-          reg: /^#关闭[S|s]team播报$/,
+          reg: /^#关闭[Ss]team播报$/,
           fnc: 'stopSteamBroadcast',
           permission: 'admin'
         },
         {
-          reg: /^#启动[S|s]team播报功能$/,
+          reg: /^#启动[Ss]team播报功能$/,
           fnc: 'enableSteamBroadcastFeature',
           permission: 'master'
         },
         {
-          reg: /^#关闭[S|s]team播报功能$/,
+          reg: /^#关闭[Ss]team播报功能$/,
           fnc: 'disableSteamBroadcastFeature',
           permission: 'master'
         }

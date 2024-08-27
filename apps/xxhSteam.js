@@ -4,7 +4,7 @@ import {fetchSteamFreebies,renderHtml,captureScreenshotAsBase64,generateSteamLin
  * Command: #steam喜加一
  */
 export const steamFreebies = karin.command(
-    /^#[S|s]team喜加一$/,
+    /^#[Ss]team喜加一$/,
     async (e) => {
         try {
             const freebies = await fetchSteamFreebies();

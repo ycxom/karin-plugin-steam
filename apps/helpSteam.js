@@ -9,7 +9,7 @@ export class SteamStatusPlugin extends plugin {
       priority: 1000,
       rule: [
         {
-          reg: /^#[S|s]team帮助$/,
+          reg: /^#[Ss]team帮助$/,
           fnc: 'showHelp'
         },
       ]

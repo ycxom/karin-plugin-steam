@@ -9,11 +9,11 @@ export class SteamPlugin extends plugin {
       priority: 1000,
       rule: [
         {
-          reg: /^#[S|s]team服务器状态$/,
+          reg: /^#[Ss]team服务器状态$/,
           fnc: 'SteamServices'
         },
         {
-          reg: /^#[S|s]team排行$/,
+          reg: /^#[Ss]team排行$/,
           fnc: 'SteamCharts'
         }
       ]

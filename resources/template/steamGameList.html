@@ -2,8 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 设置视口，保证响应式布局 -->
     <title>Steam Game List</title>
-    <link rel="stylesheet" href="../css/steam-style.css">
+
+    <!-- 内嵌CSS样式 -->
+    <style>
+        /* 通用重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 设置全局字体和背景 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Header 样式 */
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Content 样式 */
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        /* 单个游戏项样式 */
+        .freebie {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: calc(33% - 20px); /* 每行显示3个游戏，间距为20px */
+            transition: transform 0.3s ease;
+        }
+
+        /* 使图片宽度固定为200px，高度自动调整，添加圆角效果 */
+        .freebie img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-bottom: 2px solid #eee;
+            border-radius: 8px; /* 添加圆角，值可以调整 */
+        }
+
+        /* 游戏信息区域 */
+        .game-info {
+            padding: 15px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* hover 效果：鼠标悬停时放大 */
+        .freebie:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 响应式布局：当屏幕小于 768px 时，每行显示2个游戏 */
+        @media (max-width: 768px) {
+            .freebie {
+                width: calc(50% - 20px); /* 每行显示2个游戏 */
+            }
+        }
+
+        /* 响应式布局：当屏幕小于 480px 时，每行显示1个游戏 */
+        @media (max-width: 480px) {
+            .freebie {
+                width: 100%; /* 每行显示1个游戏 */
+            }
+
+            .header {
+                font-size: 20px; /* 调整标题字体大小 */
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="header">该Steam拥有 {{gameCount}} 款游戏</div>
@@ -11,7 +108,7 @@
         {{#each freebies}}
         <div class="freebie">
             <img src="{{this.coverUrl}}" alt="封面图">
-            <div>
+            <div class="game-info">
                 <div class="title">{{this.title}}</div>
                 <div class="info">
                     {{{this.description}}} <!-- 使用三重花括号来渲染 HTML 内容 -->

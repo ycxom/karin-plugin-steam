@@ -1,5 +1,6 @@
 import { plugin, segment } from 'node-karin';
-import { screenshotSteamServices, screenshotSteamCharts } from '../lib/common/screenshot.js';
+import { screenshotSteamServices } from '../lib/common/screenshot.js';
+import { screenshotSteamCharts } from '../lib/common/SteamDBscreenshot.js';
 
 export class SteamPlugin extends plugin {
   constructor() {
@@ -13,7 +14,7 @@ export class SteamPlugin extends plugin {
           fnc: 'SteamServices'
         },
         {
-          reg: /^#[Ss]team排行$/,
+          reg: /^#[Ss]team排行$/,//未完成的功能，没能成功过cf盾，请求大佬帮帮
           fnc: 'SteamCharts'
         }
       ]

@@ -37,7 +37,7 @@ export const steamLibraryCommand = karin.command(
     }
 );
 
-export const steamUserLibraryCommand = karin.command(/^#查看steam库存$/, async (e) => {
+export const steamUserLibraryCommand = karin.command(/^#查看[Ss]team库存$/, async (e) => {
 
     /** 存在at */
     if (e.at.length) {

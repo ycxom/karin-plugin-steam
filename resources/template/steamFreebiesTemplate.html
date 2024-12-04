@@ -1,17 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>Steam Freebies</title>
-    <link rel="stylesheet" href="../css/steam-style.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .freebie {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .freebie h3 {
+            color: #333;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .details {
+            margin-top: 10px;
+            color: #666;
+        }
+        .details p {
+            margin: 5px 0;
+        }
+        .freebie img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .freebie p {
+            margin-top: 10px;
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
     {{#each freebies}}
     <div class="freebie">
-        <div class="title">{{this.title}}</div>
-        <div class="info">
-            {{{this.description}}} <!-- 使用三重花括号来渲染 HTML 内容 -->
+        <h3>{{title}}</h3>
+        <div class="details">
+            <p><strong>评分:</strong> {{rating}}</p>
+            <p><strong>支持中文:</strong> {{chineseSupport}}</p>
+            <p><strong>截止时间:</strong> {{deadline}}</p>
         </div>
+        <img src="{{imgSrc}}" alt="{{title}}">
+        <p>{{description}}</p>
     </div>
     {{/each}}
 </body>

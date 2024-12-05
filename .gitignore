@@ -1,6 +1,6 @@
-# 忽略 node_modules 目录
+# 忽略目录与配置文件
 node_modules/
-config/config/
+config/config/*
 data/
 
 # 忽略日志文件

@@ -2,7 +2,9 @@
 proxy: 'http://127.0.0.1:10809'
 
 #填写Steam APi Key
-steamApiKey: ''
+steamApiKeys:
+- '114514'
+- '1919810'
 
 #填写发送通知消息的qq
 qq: ''

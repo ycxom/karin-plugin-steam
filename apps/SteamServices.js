@@ -6,7 +6,7 @@ import { screenshotSteamCharts } from '../lib/common/SteamDBscreenshot.js';
  * #steam服务器状态
  */
 export const steamServices = karin.command(
-  /^#[Ss]team服务器状态$/,
+  /^#查看?[Ss]team服务器状态$/,
   async (e) => {
     try {
       const base64Image = await screenshotSteamServices();
@@ -25,7 +25,7 @@ export const steamServices = karin.command(
 );
 
 /**
- * #steam排行    （你说它可能会cf盾拦截，截图失败可能需要服务器处理方案）
+ * #steam排行
  */
 export const steamCharts = karin.command(
   /^#[Ss]team排行$/,

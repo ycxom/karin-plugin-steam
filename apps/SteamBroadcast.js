@@ -1,113 +1,117 @@
-import { plugin ,logger } from 'node-karin';
+// apps/SteamBroadcast.js
+import { karin, logger } from 'node-karin';
 import { startMonitoring, stopMonitoring } from '../lib/monitor/monitorSteamStatus.js';
-import { readData, writeData, readConfig, writeConfig } from '../lib/main/readwritefile.js';
+import { setGroupBroadcast, getGroupBroadcastStatus } from '../lib/main/databaseOps.js';
+import { writeConfig } from '../lib/main/writefile.js';
+import { Config } from '../lib/config.js';
 
-export class SteamBroadcastPlugin extends plugin {
-  constructor() {
-    super({
-      name: 'SteamBroadcastPlugin',
-      dsc: '启动和关闭 Steam 播报的插件',
-      priority: 1000,
-      rule: [
-        {
-          reg: /^#启动[Ss]team播报$/,
-          fnc: 'startSteamBroadcast',
-          permission: 'admin'
-        },
-        {
-          reg: /^#关闭[Ss]team播报$/,
-          fnc: 'stopSteamBroadcast',
-          permission: 'admin'
-        },
-        {
-          reg: /^#启动[Ss]team播报功能$/,
-          fnc: 'enableSteamBroadcastFeature',
-          permission: 'master'
-        },
-        {
-          reg: /^#关闭[Ss]team播报功能$/,
-          fnc: 'disableSteamBroadcastFeature',
-          permission: 'master'
-        }
-      ]
-    });
-    this.onLoad(); // 在构造函数中调用 onLoad 方法
-  }
 
-  async startSteamBroadcast(e) {
-    const groupId = String(e.group_id); // 确保 groupId 是字符串
-    logger.log(`[startSteamBroadcast] 收到启动播报请求，群聊ID: ${groupId}`);
-    const data = readData();
-
-    if (!data.groups) {
-      data.groups = {};
+// 启动某群Steam播报（需 admin）
+export const startSteamBroadcast = karin.command(
+  /^#启动[Ss]team播报$/,
+  async (e) => {
+    const groupId = String(e.groupId);
+    logger.log(`[startSteamBroadcast] 收到启动播报请求，群: ${groupId}`);
+    try {
+      if (await getGroupBroadcastStatus(groupId)) {
+        return e.reply(`群聊 ${groupId} 已经启动了 Steam 播报`);
+      }
+      await setGroupBroadcast(groupId, true);
+      logger.log(`[startSteamBroadcast] 群: ${groupId} 播报启动成功`);
+      return e.reply(`群聊 ${groupId} 的 Steam 播报已启动`);
+    } catch (error) {
+      logger.error(`[startSteamBroadcast] 启动失败:`, error);
+      return e.reply('启动 Steam 播报失败，请稍后再试');
     }
+  },
+  {
+    name: 'start_steam_broadcast',
+    desc: '启动本群Steam播报功能',
+    priority: 1000,
+    permission: 'admin'
+  }
+);
 
-    if (!data.groups[groupId]) {
-      data.groups[groupId] = { steamIds: [], enabled: true };
-    } else if (data.groups[groupId].enabled) {
-      this.reply(`群聊 ${groupId} 已经启动了 Steam 播报`);
-      logger.log(`[startSteamBroadcast] 群聊 ${groupId} 已经启动了 Steam 播报`);
-      return;
-    } else {
-      data.groups[groupId].enabled = true;
+// 关闭某群Steam播报（需 admin）
+export const stopSteamBroadcast = karin.command(
+  /^#关闭[Ss]team播报$/,
+  async (e) => {
+    const groupId = String(e.groupId);
+    logger.log(`[stopSteamBroadcast] 收到关闭播报请求，群: ${groupId}`);
+    try {
+      if (!await getGroupBroadcastStatus(groupId)) {
+        return e.reply(`群聊 ${groupId} 的 Steam 播报已经关闭`);
+      }
+      await setGroupBroadcast(groupId, false);
+      logger.log(`[stopSteamBroadcast] 群: ${groupId} 播报关闭成功`);
+      return e.reply(`群聊 ${groupId} 的 Steam 播报已关闭`);
+    } catch (error) {
+      logger.error(`[stopSteamBroadcast] 关闭失败:`, error);
+      return e.reply('关闭 Steam 播报失败，请稍后再试');
     }
-    writeData(data);
-
-    this.reply(`群聊 ${groupId} 的 Steam 播报已启动`);
-    logger.log(`[startSteamBroadcast] 群聊 ${groupId} 的 Steam 播报已启动`);
+  },
+  {
+    name: 'stop_steam_broadcast',
+    desc: '关闭本群Steam播报功能',
+    priority: 1000,
+    permission: 'admin'
   }
+);
 
-  async stopSteamBroadcast(e) {
-    const groupId = String(e.group_id); // 确保 groupId 是字符串
-    logger.log(`[stopSteamBroadcast] 收到关闭播报请求，群聊ID: ${groupId}`);
-    const data = readData();
-
-    if (!data.groups || !data.groups[groupId]) {
-      this.reply(`群聊 ${groupId} 中没有绑定任何 Steam ID`);
-      logger.log(`[stopSteamBroadcast] 群聊 ${groupId} 中没有绑定任何 Steam ID`);
-      return;
-    }
-
-    data.groups[groupId].enabled = false;
-    writeData(data);
-
-    this.reply(`群聊 ${groupId} 的 Steam 播报已关闭`);
-    logger.log(`[stopSteamBroadcast] 群聊 ${groupId} 的 Steam 播报已关闭`);
+// 全局启用（需 master）
+export const enableSteamBroadcastFeature = karin.command(
+  /^#启动[Ss]team播报功能$/,
+  async (e) => {
+    // ✅ 直接调用 writeConfig 写入需要修改的配置
+    await writeConfig({ steamBroadcastEnabled: true });
+    startMonitoring();
+    logger.log('[enableSteamBroadcastFeature] 全局Steam播报功能已启用');
+    // 框架的监听器会自动更新内存中的 Config 对象
+    return e.reply('Steam 播报功能已全局启用');
+  },
+  {
+    name: 'enable_steam_broadcast_feature',
+    desc: '全局启用Steam播报（主人）',
+    priority: 1000,
+    permission: 'master',
+    event: 'message.group'
   }
+);
 
-  async enableSteamBroadcastFeature() {
-    const config = readConfig();
-    config.steamBroadcastEnabled = true;
-    writeConfig(config);
-
-    this.reply(`Steam 播报功能已启用`);
-    logger.log(`[enableSteamBroadcastFeature] Steam 播报功能已启用`);
-
-    // 启动监听
-    startMonitoring(this);
-  }
-
-  async disableSteamBroadcastFeature() {
-    const config = readConfig();
-    config.steamBroadcastEnabled = false;
-    writeConfig(config);
-
-    this.reply(`Steam 播报功能已关闭`);
-    logger.log(`[disableSteamBroadcastFeature] Steam 播报功能已关闭`);
-
-    // 停止监听
+// 全局禁用（需 master）
+export const disableSteamBroadcastFeature = karin.command(
+  /^#关闭[Ss]team播报功能$/,
+  async (e) => {
+    // ✅ 直接调用 writeConfig 写入需要修改的配置
+    await writeConfig({ steamBroadcastEnabled: false });
     stopMonitoring();
+    logger.log('[disableSteamBroadcastFeature] 全局Steam播报功能已关闭');
+    return e.reply('Steam 播报功能已全局关闭');
+  },
+  {
+    name: 'disable_steam_broadcast_feature',
+    desc: '全局禁用Steam播报（主人）',
+    priority: 1000,
+    permission: 'master'
   }
+);
 
-  async onLoad() {
-    const config = readConfig();
-    if (config.steamBroadcastEnabled) {
-        logger.debug(`[onLoad] 启动全局 Steam 播报监控`);
-        startMonitoring(); // 启动全局监控任务
-    }
+// 插件初始化（自动检测是否全局启用监控），建议在入口脚本调用一次
+export async function onPluginLoad() {
+  if (Config.steamBroadcastEnabled) {
+    logger.debug('[onPluginLoad] 检测到Steam播报启用中，启动全局监控');
+    startMonitoring();
+  } else {
+    logger.debug('[onPluginLoad] Steam播报未全局启用');
+  }
 }
 
-}
+// 默认导出
+export default [
+  startSteamBroadcast,
+  stopSteamBroadcast,
+  enableSteamBroadcastFeature,
+  disableSteamBroadcastFeature
+];
 
-export default new SteamBroadcastPlugin();
+startMonitoring(); // 确保插件加载时启动监控

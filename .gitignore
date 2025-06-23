@@ -18,3 +18,4 @@ Thumbs.db
 
 # 忽略临时文件
 *.tmp
+config/config.yaml

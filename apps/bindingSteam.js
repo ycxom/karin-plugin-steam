@@ -1,148 +1,167 @@
-import { plugin, segment } from 'node-karin';
-import { readData } from '../lib/main/readwritefile.js';
-import {  fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
-import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js';
-import { fetchSteamLibrary, renderGamesToBase64 } from '../lib/main/SteamInventory.js';
+import { karin, segment, logger } from 'node-karin'
+import { getSteamIdByQQ } from '../lib/main/databaseOps.js'
+import { fetchSteamStatus } from '../lib/main/fetchSteamStatus.js'
+import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js'
+import { fetchSteamLibrary, renderGamesToBase64 } from '../lib/main/SteamInventory.js'
 
-export class SteamStatusPlugin extends plugin {
-  constructor() {
-    super({
-      name: 'SteamStatusPlugin',
-      dsc: '查询 Steam ID 状态的插件',
-      priority: 1000,
-      rule: [
-        {
-          reg: /^#查询[Ss]team\s*(.+)$/,
-          fnc: 'querySteamStatus'
-        },
-        {
-          reg: /^#查看我的[Ss]team$/,
-          fnc: 'queryMySteam'
-        },
-        {
-          reg: /^#查询[Ss]team好友\s*(.+)$/,
-          fnc: 'querySteamFriends'
-        },
-        {
-          reg: /^#查看我的[Ss]team好友$/,
-          fnc: 'queryMySteamFriends'
-        },
-        {
-          reg: /^#查看我的[Ss]team库存$/,
-          fnc: 'queryMysteamLibraryCommand'
-        }
-      ]
-    });
-  }
-
-  async querySteamStatus(e) {
-    const playerIdentifier = e.msg.replace(/^#查询[Ss]team\s*/,'').trim();
+/**
+ * #查询steam xxx
+ */
+export const querySteamStatus = karin.command(
+  /^#查询[Ss]team\s*(.+)$/,
+  async (e) => {
+    const playerIdentifier = e.msg.replace(/^#查询[Ss]team\s*/, '').trim();
     try {
       const status = await fetchSteamStatus(playerIdentifier);
       const result = await screenshotSteamProfile(playerIdentifier);
       if (result.error) {
-        this.reply(result.error);
+        return e.reply(result.error);
       } else if (result.image) {
-        this.reply(segment.image(`base64://${result.image}`));
+        return e.reply(segment.image(`base64://${result.image}`));
       } else {
-        this.reply(formatSteamStatus(status));
+        return e.reply(formatSteamStatus(status));
       }
     } catch (error) {
-      this.reply('查询失败，请稍后再试');
-      console.error('Error querying Steam status:', error);
+      logger.error('查询 Steam状态失败:', error);
+      return e.reply('查询失败，请稍后再试');
     }
+  },
+  {
+    name: 'query_steam_status',
+    desc: '查询Steam用户状态',
+    priority: 1000,
+    permission: 'all'
   }
+);
 
-  async queryMySteam(e) {
-    const qq = e.sender.user_id;
-    const data = readData();
-    const steamID = data[qq];
+/**
+ * #查看我的Steam
+ */
+export const queryMySteam = karin.command(
+  /^#查看我的[Ss]team$/,
+  async (e) => {
+    const qq = e.sender.userId;
+    const steamID = await getSteamIdByQQ(qq);
     if (!steamID) {
-      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
-      return;
+      return e.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
     }
     try {
       const status = await fetchSteamStatus(steamID);
       const result = await screenshotSteamProfile(steamID);
       if (result.error) {
-        this.reply(result.error);
+        return e.reply(result.error);
       } else if (result.image) {
-        this.reply(segment.image(`base64://${result.image}`));
+        return e.reply(segment.image(`base64://${result.image}`));
       } else {
-        this.reply(formatSteamStatus(status));
+        return e.reply(formatSteamStatus(status));
       }
     } catch (error) {
-      this.reply('查询失败，请稍后再试');
-      console.error('Error querying my Steam status:', error);
+      logger.error('查询自己Steam状态失败:', error);
+      return e.reply('查询失败，请稍后再试');
     }
+  },
+  {
+    name: 'query_my_steam',
+    desc: '查看已绑定QQ的Steam信息',
+    priority: 1000,
+    permission: 'all'
   }
+);
 
-
-  async querySteamFriends(e) {
-    const playerIdentifier = e.msg.replace(/^#查询[Ss]team好友\s*/,'').trim();
+/**
+ * #查询steam好友 xxx
+ */
+export const querySteamFriends = karin.command(
+  /^#查询[Ss]team好友\s*(.+)$/,
+  async (e) => {
+    const playerIdentifier = e.msg.replace(/^#查询[Ss]team好友\s*/, '').trim();
     try {
       const result = await screenshotSteamFriends(playerIdentifier);
       if (result.error) {
-        this.reply(result.error);
+        return e.reply(result.error);
       } else if (result.image) {
-        this.reply(segment.image(`base64://${result.image}`));
+        return e.reply(segment.image(`base64://${result.image}`));
       }
     } catch (error) {
-      console.error('Error querying steam friends:', error);
-      this.reply('查询失败，请稍后再试');
+      logger.error('查询 Steam好友失败:', error);
+      return e.reply('查询失败，请稍后再试');
     }
+  },
+  {
+    name: 'query_steam_friends',
+    desc: '查询Steam好友信息',
+    priority: 1000,
+    permission: 'all'
   }
-  async queryMySteamFriends(e) {
-    const qq = e.sender.user_id;
-    const data = readData();
-    const steamID = data[qq];
+);
+
+/**
+ * #查看我的steam好友
+ */
+export const queryMySteamFriends = karin.command(
+  /^#查看我的[Ss]team好友$/,
+  async (e) => {
+    const qq = e.sender.userId;
+    const steamID = await getSteamIdByQQ(qq);
     if (!steamID) {
-      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
-      return;
+      return e.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
     }
     try {
       const result = await screenshotSteamFriends(steamID);
       if (result.error) {
-        this.reply(result.error);
+        return e.reply(result.error);
       } else if (result.image) {
-        this.reply(segment.image(`base64://${result.image}`));
+        return e.reply(segment.image(`base64://${result.image}`));
       }
     } catch (error) {
-      console.error('Error querying my Steam friends:', error);
-      this.reply('查询失败，请稍后再试');
+      logger.error('查询自己Steam好友失败:', error);
+      return e.reply('查询失败，请稍后再试');
     }
+  },
+  {
+    name: 'query_my_steam_friends',
+    desc: '查看自己Steam好友列表',
+    priority: 1000,
+    permission: 'all'
   }
+);
 
-
-  async queryMysteamLibraryCommand(e) {
-    const qq = e.sender.user_id;
-    const data = readData();
-    const steamID = data[qq];
+/**
+ * #查看我的steam库存
+ */
+export const queryMySteamLibrary = karin.command(
+  /^#查看我的[Ss]team库存$/,
+  async (e) => {
+    const qq = e.sender.userId;
+    const steamID = await getSteamIdByQQ(qq);
     if (!steamID) {
-      this.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
-      return;
+      return e.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
     }
     try {
-      const steamUserId = await fetchSteamLibrary(steamID);
-
-      if (steamUserId && steamUserId.length > 0) {
-          const base64Content = await renderGamesToBase64(steamUserId);
-          logger.log(`[steamLibraryCommand] 准备发送游戏库信息到群聊`);
-          e.reply(segment.image(`base64://${base64Content}`));
+      const games = await fetchSteamLibrary(steamID);
+      if (games && games.length > 0) {
+        const base64Content = await renderGamesToBase64(games);
+        logger.log(`[queryMySteamLibrary] 准备发送游戏库信息到群聊`);
+        return e.reply(segment.image(`base64://${base64Content}`));
       } else {
-          logger.warn(`[steamLibraryCommand] 用户 ${steamUserId} 没有游戏或获取游戏库失败。`);
-          e.reply(`用户 ${steamUserId} 没有游戏或获取游戏库失败。`);
+        logger.warn(`[queryMySteamLibrary] 用户 ${steamID} 无游戏或获取失败`);
+        return e.reply(`用户 ${steamID} 没有游戏或获取游戏库失败`);
       }
     } catch (error) {
-      this.reply('查询失败，请稍后再试');
-      console.error('Error querying my Steam status:', error);
+      logger.error('查询 Steam 库存失败:', error);
+      return e.reply('查询失败，请稍后再试');
     }
+  },
+  {
+    name: 'query_my_steam_library',
+    desc: '查看自己Steam的库存游戏',
+    priority: 1000,
+    permission: 'all'
   }
-}
+);
+
 function formatSteamStatus(status) {
-  if (!status) {
-    return '未找到玩家';
-  }
+  if (!status) return '未找到玩家信息';
   let result = `
 玩家名: ${status.actualPersonaName}
 状态: ${status.profileStatus}
@@ -153,5 +172,3 @@ function formatSteamStatus(status) {
   result += `头像截图已附上`;
   return result;
 }
-
-export default new SteamStatusPlugin();

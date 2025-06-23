@@ -1,23 +1,56 @@
 {
-    "name": "karin-plugin-steam",
-    "version": "0.0.1",
-    "author": "ycxom",
-    "type": "module",
-    "dependencies": {
-        "axios": "^1.7.7",
-        "cheerio": "^1.0.0",
-        "chokidar": "^3.6.0",
-        "handlebars": "^4.7.8",
-        "https-proxy-agent": "^5.0.1",
-        "js-yaml": "^4.1.0",
-        "node-schedule": "^2.1.1",
-        "playwright": "^1.48.2",
-        "puppeteer": "^10.4.0",
-        "puppeteer-extra": "^3.3.6",
-        "puppeteer-extra-plugin-stealth": "^2.11.2",
-        "sharp": "^0.33.5",
-        "user-agents": "^1.1.360",
-        "xml2js": "^0.6.2",
-        "yaml": "^2.6.0"
-    }
+  "name": "karin-plugin-steam",
+  "version": "1.0.0",
+  "author": "ycxom",
+  "type": "module",
+  "main": "index.js",
+  "description": "Karin plugin for Steam information and monitoring",
+  "homepage": "https://github.com/ycxom/karin-plugin-steam",
+  "bugs": {
+    "url": "https://github.com/ycxom/karin-plugin-steam/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ycxom/karin-plugin-steam.git"
+  },
+  "scripts": {
+    "build": "echo skip build",
+    "pub": "npm publish --access public",
+    "sort": "npx sort-package-json"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cheerio": "^1.0.0",
+    "chokidar": "^3.6.0",
+    "handlebars": "^4.7.8",
+    "he": "^1.2.0",
+    "https-proxy-agent": "^5.0.1",
+    "js-yaml": "^4.1.0",
+    "node-schedule": "^2.1.1",
+    "puppeteer": "^24.10.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sharp": "^0.33.5",
+    "sqlite3": "^5.1.7",
+    "user-agents": "^1.1.360",
+    "xml2js": "^0.6.2",
+    "yaml": "^2.6.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "karin": {
+    "apps": [
+      "apps"
+    ],
+    "static": [
+      "resources"
+    ],
+    "files": [
+      "config",
+      "data",
+      "resources"
+    ]
+  }
 }

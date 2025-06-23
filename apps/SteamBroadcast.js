@@ -96,7 +96,8 @@ export const disableSteamBroadcastFeature = karin.command(
   }
 );
 
-// 插件初始化（自动检测是否全局启用监控），建议在入口脚本调用一次
+// 插件初始化（自动检测是否全局启用监控）
+onPluginLoad();
 export async function onPluginLoad() {
   if (Config.steamBroadcastEnabled) {
     logger.debug('[onPluginLoad] 检测到Steam播报启用中，启动全局监控');
@@ -113,5 +114,3 @@ export default [
   enableSteamBroadcastFeature,
   disableSteamBroadcastFeature
 ];
-
-startMonitoring(); // 确保插件加载时启动监控

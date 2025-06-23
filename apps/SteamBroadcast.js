@@ -62,11 +62,9 @@ export const stopSteamBroadcast = karin.command(
 export const enableSteamBroadcastFeature = karin.command(
   /^#启动[Ss]team播报功能$/,
   async (e) => {
-    // ✅ 直接调用 writeConfig 写入需要修改的配置
     await writeConfig({ steamBroadcastEnabled: true });
     startMonitoring();
     logger.log('[enableSteamBroadcastFeature] 全局Steam播报功能已启用');
-    // 框架的监听器会自动更新内存中的 Config 对象
     return e.reply('Steam 播报功能已全局启用');
   },
   {
@@ -82,7 +80,6 @@ export const enableSteamBroadcastFeature = karin.command(
 export const disableSteamBroadcastFeature = karin.command(
   /^#关闭[Ss]team播报功能$/,
   async (e) => {
-    // ✅ 直接调用 writeConfig 写入需要修改的配置
     await writeConfig({ steamBroadcastEnabled: false });
     stopMonitoring();
     logger.log('[disableSteamBroadcastFeature] 全局Steam播报功能已关闭');

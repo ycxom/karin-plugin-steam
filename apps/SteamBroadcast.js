@@ -1,10 +1,10 @@
 // apps/SteamBroadcast.js
 import { karin, logger } from 'node-karin';
 import { startMonitoring, stopMonitoring } from '../lib/monitor/monitorSteamStatus.js';
+import { startInventoryMonitoring, stopInventoryMonitoring } from '../lib/monitor/monitorInventory.js';
 import { setGroupBroadcast, getGroupBroadcastStatus } from '../lib/main/databaseOps.js';
 import { writeConfig } from '../lib/main/writefile.js';
 import { Config } from '../lib/config.js';
-
 
 // 启动某群Steam播报（需 admin）
 export const startSteamBroadcast = karin.command(
@@ -97,10 +97,16 @@ export const disableSteamBroadcastFeature = karin.command(
 onPluginLoad();
 export async function onPluginLoad() {
   if (Config.steamBroadcastEnabled) {
-    logger.debug('[onPluginLoad] 检测到Steam播报启用中，启动全局监控');
+    logger.debug('[onPluginLoad] 状态播报已启用，启动状态监控');
     startMonitoring();
   } else {
-    logger.debug('[onPluginLoad] Steam播报未全局启用');
+    logger.debug('[onPluginLoad] 状态播报未全局启用');
+  }
+
+  // ✅ 启动库存监控 (可以为其添加独立的配置开关)
+  if (Config.inventoryMonitorEnabled) { // 建议在config.yaml中添加此开关
+    logger.debug('[onPluginLoad] 库存监控已启用，启动库存监控任务');
+    startInventoryMonitoring();
   }
 }
 

@@ -2,117 +2,181 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 设置视口，保证响应式布局 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steam Game List</title>
-
-    <!-- 内嵌CSS样式 -->
     <style>
-        /* 通用重置样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        /* 设置全局字体和背景 */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #1b2838; /* Steam深蓝色背景 */
+            color: #fff;
             padding: 20px;
+            max-width: 1080px;
+            margin: 0 auto;
         }
-
-        /* Header 样式 */
         .header {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #444;
+            color: #fff;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: rgba(42, 71, 94, 0.7);
+            border-radius: 8px;
         }
-
-        /* Content 样式 */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background-color: rgba(42, 71, 94, 0.5);
+            padding: 12px;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 8px 15px;
+        }
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #66c0f4;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #acdbf5;
+            margin-top: 5px;
+        }
         .content {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
-            gap: 20px;
+            justify-content: flex-start;
+            gap: 15px;
         }
-
-        /* 单个游戏项样式 */
         .freebie {
-            background-color: #fff;
+            background-color: #2a475e; /* Steam蓝色面板 */
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             overflow: hidden;
-            width: calc(33% - 20px); /* 每行显示3个游戏，间距为20px */
-            transition: transform 0.3s ease;
+            width: calc(20% - 12px); /* 每行5个游戏 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 15px;
         }
-
-        /* 使图片宽度固定为200px，高度自动调整，添加圆角效果 */
         .freebie img {
             width: 100%;
-            max-width: 200px;
             height: auto;
             display: block;
-            margin: 0 auto;
-            border-bottom: 2px solid #eee;
-            border-radius: 8px; /* 添加圆角，值可以调整 */
+            border-bottom: 2px solid #1b2838;
         }
-
-        /* 游戏信息区域 */
         .game-info {
-            padding: 15px;
+            padding: 12px;
         }
-
         .title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
+            color: #66c0f4; /* Steam亮蓝色 */
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
         .info {
             font-size: 14px;
-            color: #777;
+            color: #acdbf5; /* 浅蓝色 */
         }
-
-        /* hover 效果：鼠标悬停时放大 */
         .freebie:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
-
-        /* 响应式布局：当屏幕小于 768px 时，每行显示2个游戏 */
-        @media (max-width: 768px) {
+        
+        /* 高亮显示游戏时间排名前10的游戏 */
+        .freebie:nth-child(-n+10) {
+            border: 2px solid #66c0f4;
+        }
+        .freebie:nth-child(-n+10) .title:after {
+            content: " ★";
+            color: #ff9900;
+        }
+        
+        /* 响应式布局 */
+        @media (max-width: 1080px) {
             .freebie {
-                width: calc(50% - 20px); /* 每行显示2个游戏 */
+                width: calc(25% - 12px); /* 屏幕变小时，每行4个 */
             }
         }
-
-        /* 响应式布局：当屏幕小于 480px 时，每行显示1个游戏 */
-        @media (max-width: 480px) {
+        @media (max-width: 800px) {
             .freebie {
-                width: 100%; /* 每行显示1个游戏 */
+                width: calc(33.33% - 10px); /* 更小屏幕，每行3个 */
             }
-
-            .header {
-                font-size: 20px; /* 调整标题字体大小 */
-            }
+        }
+        
+        /* 只展示最多前100个游戏，防止图片过长 */
+        .show-more-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #66c0f4;
+            color: #1b2838;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .page-info {
+            background-color: rgba(42, 71, 94, 0.7);
+            color: #acdbf5;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="header">该Steam拥有 {{gameCount}} 款游戏</div>
+    <div class="header">Steam游戏库统计</div>
+    
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-value">{{gameCount}}</div>
+            <div class="stat-label">游戏总数</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{totalHours}}</div>
+            <div class="stat-label">总游戏时长(小时)</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{totalDays}}</div>
+            <div class="stat-label">总游戏时长(天)</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{recentlyPlayedCount}}</div>
+            <div class="stat-label">两周内活跃游戏</div>
+        </div>
+    </div>
+    
+    <div class="pagination">
+        <div class="page-info">游戏时长排行</div>
+    </div>
+    
     <div class="content">
         {{#each freebies}}
         <div class="freebie">
-            <img src="{{this.coverUrl}}" alt="封面图">
+            <img src="{{this.coverUrl}}" alt="封面图" loading="lazy">
             <div class="game-info">
                 <div class="title">{{this.title}}</div>
-                <div class="info">
-                    {{{this.description}}} <!-- 使用三重花括号来渲染 HTML 内容 -->
-                </div>
+                <div class="info">{{this.description}}</div>
             </div>
         </div>
         {{/each}}

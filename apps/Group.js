@@ -13,7 +13,7 @@ export const joinSteamGroup = karin.command(
     const qq = e.sender.userId
     const groupId = String(e.groupId);
     const steamID = await getSteamIdByQQ(qq);
-    logger.info(steamID)
+    logger.debug(`{steamID}: ${steamID}, QQ: ${qq}, Group ID: ${groupId}`);
     if (!steamID) {
       return e.reply('请先绑定 Steam 账号，再加入群聊。');
     }

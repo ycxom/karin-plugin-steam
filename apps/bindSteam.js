@@ -6,7 +6,6 @@ export const bindSteamAccount = karin.command(
   /^#绑定[Ss]team\s*(.+)$/,
   async (e) => {
     const input = e.msg.replace(/^#绑定[Ss]team\s*/, '').trim();
-    logger.info(e);
     const qq = e.sender.userId;
     try {
       let steamID = input;

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @font-face {
+            font-family: 'Noto Sans SC';
+            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+        }
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #1e2024;
+            color: #c7d5e0;
+            margin: 0;
+            padding: 15px;
+            width: 450px;
+            box-sizing: border-box;
+        }
+        .container {
+            border: 1px solid #3a3f4b;
+            border-radius: 8px;
+            background-color: #2a2e35;
+            padding: 15px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #3a3f4b;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .user-info {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .title {
+            color: #66c0f4;
+            font-size: 14px;
+        }
+        .game-list {
+            margin-top: 10px;
+        }
+        .game-item {
+            background-color: #1b2838;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            font-size: 15px;
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ userAvatarUrl }}" alt="avatar" class="avatar">
+            <div class="user-info">
+                <div class="username">{{ userName }}</div>
+                <div class="title">游戏库新增提醒</div>
+            </div>
+        </div>
+        <div class="game-list">
+            新增了 {{ gameCount }} 款游戏：
+            <ul>
+                {{#each newGames}}
+                <li class="game-item">🎁 {{ this.name }}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

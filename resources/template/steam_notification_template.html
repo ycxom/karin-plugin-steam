@@ -49,14 +49,18 @@
             position: relative;
             z-index: 1;
             margin-right: 15px;
+            width: 64px;
+            height: 64px;
         }
 
         .imgframe {
             position: absolute;
-            top: -8px;
-            left: -8px;
-            width: calc(100% + 3px);
-            height: auto;
+            top: -5px;
+            left: -5px;
+            width: 74px;
+            /* 稍微大于头像尺寸 */
+            height: 74px;
+            /* 稍微大于头像尺寸 */
             z-index: 2;
         }
 
@@ -68,11 +72,15 @@
             height: 64px;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1;
+            border-radius: 3px;
         }
 
         .avatar {
             width: 64px;
             height: 64px;
+            position: relative;
+            z-index: 0;
+            border-radius: 3px;
         }
 
         .text {

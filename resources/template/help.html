@@ -4,17 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steam插件菜单</title>
+    <title>Steam 插件帮助菜单</title>
     <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css" />
     <style>
         :root {
-            --primary-color: #1b2838;
-            --secondary-color: #2a475e;
+            --primary-bg: rgba(27, 40, 56, 0.92);
+            --secondary-bg: rgba(42, 71, 94, 0.85);
+            --header-bg: rgba(23, 26, 33, 0.95);
             --accent-color: #66c0f4;
             --text-color: #c7d5e0;
             --highlight-color: #a3cf06;
-            --card-bg: rgba(42, 71, 94, 0.8);
-            --header-bg: #171a21;
+            --admin-color: #e74c3c;
+            --master-color: #9b59b6;
         }
 
         * {
@@ -24,223 +25,131 @@
         }
 
         body {
-            font-family: "LXGW WenKai", sans-serif;
-            background-color: var(--primary-color);
-            background-image:
-                radial-gradient(rgba(102, 192, 244, 0.1) 2px, transparent 2px),
-                radial-gradient(rgba(102, 192, 244, 0.07) 2px, transparent 2px);
-            background-size: 50px 50px;
-            background-position: 0 0, 25px 25px;
+            font-family: "LXGW WenKai", 'Segoe UI', sans-serif;
+            background-image: url('{{ backgroundDataUri }}');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
             color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
+            line-height: 1.7;
+            padding: 25px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 750px;
             margin: 0 auto;
+            background-color: var(--primary-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(102, 192, 244, 0.2);
+            overflow: hidden;
         }
 
         header {
             background-color: var(--header-bg);
             color: white;
             padding: 20px;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             text-align: center;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+            border-bottom: 1px solid rgba(102, 192, 244, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 15px;
         }
 
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-color), var(--highlight-color));
+        .steam-logo {
+            width: 30px;
+            height: 30px;
+            filter: drop-shadow(0 0 5px var(--accent-color));
         }
 
         .category {
-            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(102, 192, 244, 0.15);
+        }
+
+        .category:last-child {
+            border-bottom: none;
         }
 
         .category-title {
             color: var(--accent-color);
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 15px;
-            padding-left: 15px;
-            border-left: 4px solid var(--accent-color);
-            display: flex;
-            align-items: center;
-        }
-
-        .category-title::after {
-            content: "";
-            flex-grow: 1;
-            height: 1px;
-            background: linear-gradient(90deg, var(--accent-color), transparent);
-            margin-left: 15px;
+            padding-left: 10px;
+            border-left: 3px solid var(--accent-color);
         }
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
         }
 
         .card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--accent-color);
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card-header {
-            padding: 15px;
-            font-weight: bold;
-            font-size: 18px;
+        .card .desc {
+            font-size: 16px;
+            font-weight: 500;
             color: white;
-            background-color: rgba(0, 0, 0, 0.2);
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
         }
 
-        .card-header::before {
-            content: "";
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: var(--highlight-color);
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .card-content {
-            padding: 15px;
-        }
-
-        .usage {
-            color: #acdbf5;
-            font-size: 15px;
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.15);
+        .card .usage {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(0, 0, 0, 0.25);
+            padding: 8px 12px;
             border-radius: 5px;
-            border-left: 3px solid rgba(102, 192, 244, 0.5);
+            font-size: 14px;
+            color: #b8cde4;
+            word-wrap: break-word;
         }
 
-        .admin-badge,
-        .master-badge {
-            display: inline-block;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-
-        .admin-badge {
-            background-color: #e74c3c;
+        .badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
             color: white;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        .master-badge {
-            background-color: #9b59b6;
-            color: white;
+        .badge.admin {
+            background-color: var(--admin-color);
         }
 
-        .user-badge {
-            background-color: #6bdc5a;
-            color: white;
-        }
-
-        .steam-logo {
-            display: inline-block;
-            margin-right: 15px;
-            animation: steam 3s infinite;
-            width: 32px;
-            height: 32px;
-        }
-
-        @keyframes steam {
-
-            0%,
-            100% {
-                opacity: 0.7;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
+        .badge.master {
+            background-color: var(--master-color);
         }
 
         footer {
             text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            font-size: 14px;
-            color: #7a8b98;
-            border-top: 1px solid rgba(102, 192, 244, 0.2);
+            padding: 15px;
+            font-size: 13px;
+            color: #8f98a0;
+            background-color: var(--header-bg);
         }
 
         .highlight {
             color: var(--highlight-color);
             font-weight: bold;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .card-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-
-            body {
-                padding: 10px;
-            }
-
-            header {
-                font-size: 22px;
-                padding: 15px;
-            }
         }
     </style>
 </head>
@@ -252,221 +161,52 @@
                 <path
                     d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C7.4,22 3.55,18.92 2.36,14.73L6.19,16.31C6.45,17.6 7.6,18.58 8.97,18.58C10.53,18.58 11.8,17.31 11.8,15.75C11.8,14.5 10.97,13.4 9.82,13.08L15.19,10.11C15.33,10.04 15.46,10 15.61,10C16.45,10 17.13,10.68 17.13,11.52C17.13,12.35 16.45,13.03 15.61,13.03C15.1,13.03 14.65,12.74 14.41,12.3L9.11,15.24C9.55,15.75 9.82,16.42 9.82,17.16C9.82,17.89 9.55,18.56 9.1,19.08L5.28,17.5C6.08,20.17 8.84,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M15.61,11.23C15.36,11.23 15.16,11.43 15.16,11.67C15.16,11.92 15.36,12.12 15.61,12.12C15.85,12.12 16.05,11.92 16.05,11.67C16.05,11.43 15.85,11.23 15.61,11.23M9,15.75C9,16.2 8.64,16.56 8.19,16.56C7.85,16.56 7.57,16.36 7.45,16.08L8.93,16.72C9,16.4 9,16.04 8.93,15.75C8.81,15.28 8.34,15 7.87,15.12L6.39,14.47C6.43,14.45 6.5,14.44 6.5,14.44C7.05,14.44 7.5,15 7.5,15.75C7.5,16.5 7.05,17.06 6.5,17.06C5.94,17.06 5.5,16.5 5.5,15.75C5.5,15.5 5.58,15.23 5.73,15.04L7.21,15.69C7.5,15.59 7.85,15.75 7.93,16.03C8,16.31 8,16.5 7.93,16.72L6.45,16.08C6.43,16.06 6.43,16.06 6.43,16.03C5.87,16.11 5.5,15.75 5.5,15.75C5.5,15 6.06,14.44 6.81,14.44C7.56,14.44 8.13,15 8.13,15.75C8.13,15.81 8.11,15.89 8.11,15.96C8.11,15.96 8.1,15.96 8.1,15.96C8,16.44 8.3,16.94 8.76,17.06C9.24,17.15 9.71,16.89 9.82,16.42C9.94,15.96 9.71,15.5 9.24,15.35C8.76,15.23 8.3,15.5 8.19,16C8.11,16.42 8.38,16.83 8.81,16.94L7.33,16.29C7.33,16.29 7.33,16.31 7.33,16.31C7.41,16.94 7.97,17.42 8.66,17.42C9.4,17.42 10,16.83 10,16.08C10,15.5 9.71,15 9.24,14.83L14.5,11.88C14.77,12.15 15.16,12.33 15.61,12.33C16.56,12.33 17.31,11.56 17.31,10.62C17.31,9.68 16.56,8.91 15.61,8.91C14.5,8.91 13.88,9.89 13.88,9.89L8.53,12.88C8.53,12.88 8.53,12.88 8.5,12.88C7.21,12.74 6.13,13.71 6,15C5.83,16.29 6.81,17.42 8.1,17.56C9.38,17.69 10.5,16.72 10.66,15.42C10.69,15.17 10.66,14.92 10.63,14.69L15.97,11.71C16.05,11.94 16.29,12.12 16.56,12.12C16.97,12.12 17.31,11.77 17.31,11.37C17.31,10.97 16.97,10.62 16.56,10.62C16.15,10.62 15.85,10.92 15.8,11.32L10.47,14.33C10.5,14.44 10.5,14.56 10.5,14.69C10.5,14.92 10.44,15.1 10.37,15.28L9.08,15.96C9.08,15.96 9.08,15.94 9.08,15.94C9.08,15.89 9,15.83 9,15.75Z" />
             </svg>
-            Steam插件菜单
+            Steam 插件菜单
         </header>
 
+        {{#with commands}}
         <div class="category">
-            <div class="category-title">账号管理</div>
+            <div class="category-title">通用指令</div>
             <div class="card-grid">
+                {{#each all}}
                 <div class="card">
-                    <div class="card-header">绑定Steam账号</div>
-                    <div class="card-content">
-                        <div class="usage">#绑定Steam [好友代码/SteamID/自定义URL]</div>
-                    </div>
+                    <div class="desc">{{this.desc}}</div>
+                    <div class="usage">{{this.usage}}</div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">解绑Steam账号</div>
-                    <div class="card-content">
-                        <div class="usage">#解绑Steam</div>
-                    </div>
-                </div>
+                {{/each}}
             </div>
         </div>
 
         <div class="category">
-            <div class="category-title">群聊功能</div>
+            <div class="category-title">管理员指令</div>
             <div class="card-grid">
+                {{#each admin}}
                 <div class="card">
-                    <div class="card-header">Steam加入群聊</div>
-                    <div class="card-content">
-                        <div class="usage">#Steam加入群聊</div>
+                    <div class="desc">
+                        <span>{{this.desc}}</span>
+                        <span class="badge admin">管理员</span>
                     </div>
+                    <div class="usage">{{this.usage}}</div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">Steam退出群聊</div>
-                    <div class="card-content">
-                        <div class="usage">#Steam退出群聊</div>
-                    </div>
-                </div>
+                {{/each}}
             </div>
         </div>
 
         <div class="category">
-            <div class="category-title">个人查询</div>
+            <div class="category-title">主人指令</div>
             <div class="card-grid">
+                {{#each master}}
                 <div class="card">
-                    <div class="card-header">查看Steam</div>
-                    <div class="card-content">
-                        <div class="usage">#查询Steam [好友代码/SteamID/自定义URL]</div>
+                    <div class="desc">
+                        <span>{{this.desc}}</span>
+                        <span class="badge master">主人</span>
                     </div>
+                    <div class="usage">{{this.usage}}</div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">查看Steam好友</div>
-                    <div class="card-content">
-                        <div class="usage">#查询Steam好友 [好友代码/SteamID/自定义URL]</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">查看我的Steam</div>
-                    <div class="card-content">
-                        <div class="usage">#查看我的Steam</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">查看我的Steam好友</div>
-                    <div class="card-content">
-                        <div class="usage">#查看我的Steam好友</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">查看我的Steam库存</div>
-                    <div class="card-content">
-                        <div class="usage">#查看我的Steam库存</div>
-                    </div>
-                </div>
+                {{/each}}
             </div>
         </div>
-
-        <div class="category">
-            <div class="category-title">查询他人</div>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-header">查看Steam@对方</div>
-                    <div class="card-content">
-                        <div class="usage">#查看Steam @对方</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">查看Steam好友@对方</div>
-                    <div class="card-content">
-                        <div class="usage">#查看Steam好友 @对方</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">查看对方的Steam库存</div>
-                    <div class="card-content">
-                        <div class="usage">#查看Steam库存 @对方</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="category">
-            <div class="category-title">实用工具</div>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-header">Steam喜加一</div>
-                    <div class="card-content">
-                        <div class="usage">#Steam喜加一</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">查看群聊Steam</div>
-                    <div class="card-content">
-                        <div class="usage">#查看群聊Steam</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">查看Steam服务器状态</div>
-                    <div class="card-content">
-                        <div class="usage">#查看Steam服务器状态</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="category">
-            <div class="category-title">播报管理</div>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-header">
-                        启动Steam播报
-                        <span class="admin-badge">管理员</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#启动Steam播报</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        关闭Steam播报
-                        <span class="admin-badge">管理员</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#关闭Steam播报</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        启动Steam喜加一播报
-                        <span class="admin-badge">管理员</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#启动Steam喜加一播报</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        关闭Steam喜加一播报
-                        <span class="admin-badge">管理员</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#关闭Steam喜加一播报</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        启动Steam播报功能
-                        <span class="master-badge">主人</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#启动Steam播报功能</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        关闭Steam播报功能
-                        <span class="master-badge">主人</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#关闭Steam播报功能</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        开启库存监控
-                        <span class="user-badge">本人</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#开启库存监控</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        #关闭库存监控
-                        <span class="user-badge">本人</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="usage">#关闭库存监控</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{/with}}
 
         <footer>
             Powered by Karin<span class="highlight"> & </span>Karin-plugin-steam

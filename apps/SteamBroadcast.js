@@ -2,7 +2,7 @@
 import { karin, logger } from 'node-karin';
 import { startMonitoring, stopMonitoring } from '../lib/monitor/monitorSteamStatus.js';
 import { startInventoryMonitoring, stopInventoryMonitoring } from '../lib/monitor/monitorInventory.js';
-import { setGroupBroadcast, getGroupBroadcastStatus } from '../lib/main/databaseOps.js';
+import { setGroupBroadcast, getGroupBroadcastStatus } from '../lib/db/databaseOps.js';
 import { writeConfig } from '../lib/main/writefile.js';
 import { Config } from '../lib/config.js';
 

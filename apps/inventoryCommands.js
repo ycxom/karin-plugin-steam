@@ -1,5 +1,5 @@
 import { karin, logger } from 'node-karin';
-import { getSteamIdByQQ, setInventoryMonitoring } from '../lib/main/databaseOps.js';
+import { getSteamIdByQQ, setInventoryMonitoring } from '../lib/db/databaseOps.js';
 
 // 开启本人库存监控
 export const enableMyInventoryMonitoring = karin.command(

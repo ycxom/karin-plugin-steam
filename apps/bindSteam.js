@@ -1,5 +1,5 @@
 import { karin } from 'node-karin';
-import { bindSteam, unbindSteam } from '../lib/main/databaseOps.js';
+import { bindSteam, unbindSteam } from '../lib/db/databaseOps.js';
 import { getSteamIDFromFriendCode, convertFriendCodeToSteamID64 } from '../lib/main/FriendCode.js';
 
 export const bindSteamAccount = karin.command(

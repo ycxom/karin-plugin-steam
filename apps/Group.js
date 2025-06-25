@@ -1,6 +1,6 @@
 // apps/Group.js
 import { karin, segment, logger } from 'node-karin';
-import { getSteamIdByQQ, addSteamIdToGroup, removeSteamIdFromGroup, getSteamIdsInGroup } from '../lib/main/databaseOps.js';
+import { getSteamIdByQQ, addSteamIdToGroup, removeSteamIdFromGroup, getSteamIdsInGroup } from '../lib/db/databaseOps.js';
 import { fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
 import { generateSteamUI } from '../lib/common/generateSteamUI.js';
 

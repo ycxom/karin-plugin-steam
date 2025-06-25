@@ -46,6 +46,13 @@
             font-size: 24px;
         }
 
+        .avatar-container {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            margin-right: 16px;
+        }
+
         .avatar {
             width: 72px;
             height: 72px;
@@ -54,6 +61,17 @@
             border: 2px solid #66c0f4;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
+
+        .avatar-frame {
+            position: absolute;
+            top: -11px;
+            left: -11px;
+            width: 94px;
+            height: 94px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
 
         .user-info .username {
             font-size: 24px;
@@ -259,7 +277,12 @@
 <body style="background-image: url('{{ backgroundUrl }}');">
     <div class="overlay">
         <div class="header">
-            <img src="{{ userAvatarUrl }}" alt="avatar" class="avatar">
+            <div class="avatar-container">
+                <img src="{{ userAvatarUrl }}" alt="avatar" class="avatar">
+                {{#if userAvatarFrameUrl}}
+                <img src="{{ userAvatarFrameUrl }}" alt="avatar frame" class="avatar-frame">
+                {{/if}}
+            </div>
             <div class="user-info">
                 <div class="username">{{ userName }}</div>
                 <div class="title">游戏库新增提醒</div>
@@ -274,54 +297,38 @@
                     <div class="game-title">{{ this.name }}</div>
                     <div class="game-price">{{formatPrice this.price_overview}}</div>
                 </div>
-
                 <div class="game-dev-pub">
                     开发商: {{#each this.developers}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} |
                     发行商: {{#each this.publishers}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
                 </div>
-
                 <div class="game-meta">
                     {{#if this.metacritic}}
                     <span class="tag metacritic">{{ this.metacritic.score }}</span>
                     {{/if}}
-
                     {{#each this.genres}}
                     <span class="tag">{{this.description}}</span>
                     {{/each}}
-
                     {{#if this.release_date}}
                     <span class="tag">{{this.release_date.date}}</span>
                     {{/if}}
-
                     <div class="platform-icons">
                         {{{platformIcons this.platforms}}}
                     </div>
                 </div>
-
                 <div class="section">
                     <div class="section-title">游戏简介</div>
                     <div class="section-content">{{ this.short_description }}</div>
                 </div>
-
                 <div class="section">
                     <div class="section-title">支持语言</div>
                     <div class="section-content lang">{{{cleanLanguages this.supported_languages}}}</div>
                 </div>
-
                 {{#if this.screenshots}}
                 <div class="screenshots-row">
                     {{#each this.screenshots}}
-                    {{#if @first}}
-                    <img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">
-                    {{/if}}
-                    {{#if @index}}
-                    {{#if (eq @index 1)}}
-                    <img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">
-                    {{/if}}
-                    {{#if (eq @index 2)}}
-                    <img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">
-                    {{/if}}
-                    {{/if}}
+                    {{#if (eq @index 0)}}<img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">{{/if}}
+                    {{#if (eq @index 1)}}<img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">{{/if}}
+                    {{#if (eq @index 2)}}<img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">{{/if}}
                     {{/each}}
                 </div>
                 {{/if}}
@@ -330,7 +337,7 @@
         {{/each}}
 
         <div class="footer">
-            <span>{{ currentDate }}</span>
+            <span>{{formatDate}}</span>
             <span class="footer-steam-logo">STEAM</span>
         </div>
     </div>

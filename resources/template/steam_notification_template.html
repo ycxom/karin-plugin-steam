@@ -20,131 +20,29 @@
             padding: 15px;
             margin: 10px 0;
             position: relative;
-            overflow: hidden;
-            /* 确保伪元素不会超出边界 */
-        }
-
-        .notification img {
-            border-radius: 5px;
-            margin-right: 15px;
         }
 
         .notification .content {
             display: flex;
             align-items: center;
             position: relative;
-            /* 为伪元素定位做准备 */
             padding: 6%;
             border-radius: 5px;
         }
 
-        .notification .content .text {
-            line-height: 1.2;
-            /* 调整整体行高 */
-            position: relative;
-            /* 确保文本在伪元素之上 */
-            z-index: 1;
-        }
-
-        .notification .content .text .small-gap {
-            margin-bottom: 4px;
-            /* 控制间距 */
-        }
-
-        .notification .content .text span {
-            font-weight: bold;
-            background: rgba(73, 73, 73, 0.582);
-            /* 设置透明灰色 */
-            padding: 2px;
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-blend-mode: darken;
+            filter: blur(1.5px);
+            z-index: 0;
             border-radius: 5px;
-            transition: background 0.3s, transform 0.3s;
-            backdrop-filter: blur(2px);
-            /* 添加虚化效果 */
-        }
-
-        .notification .content .text .title span {
-            color: #E0FCC0;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status span {
-            color: #91C257;
-            font-size: 16px;
-        }
-
-        .notification .content .text .title-online span {
-            color: #6DCFF6;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status-online span {
-            color: #4C91AC;
-            font-size: 16px;
-        }
-
-        .notification .content .text .title-offline span {
-            color: #979797;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status-offline span {
-            color: #6E6E6E;
-            font-size: 16px;
-        }
-
-        .notification .content .text .title-busy span {
-            color: #FF8C00;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status-busy span {
-            color: #FF6600;
-            font-size: 16px;
-        }
-
-        .notification .content .text .title-away span {
-            color: #E0FCC0;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status-away span {
-            color: #65863c;
-            font-size: 16px;
-        }
-
-        .notification .content .text .title-snooze span {
-            color: #46788E;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status-snooze span {
-            color: #355869;
-            font-size: 16px;
-        }
-
-        .notification .content .text .title-trade span {
-            color: #33CC33;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status-trade span {
-            color: #00CC00;
-            font-size: 16px;
-        }
-
-        .notification .content .text .title-play span {
-            color: #00FF00;
-            font-size: 16px;
-        }
-
-        .notification .content .text .status-play span {
-            color: #00CC00;
-            font-size: 16px;
-        }
-
-        .notification .content .text .game span {
-            color: #91C257;
-            font-size: 16px;
         }
 
         .avatar-container {
@@ -153,15 +51,7 @@
             margin-right: 15px;
         }
 
-        .avatar-frame {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 64px;
-            height: 64px;
-        }
-
-        .avatar-container .imgframe {
+        .imgframe {
             position: absolute;
             top: -8px;
             left: -8px;
@@ -179,67 +69,141 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1;
         }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+        }
+
+        .text {
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .small-gap {
+            margin-bottom: 4px;
+        }
+
+        .text span {
+            font-weight: bold;
+            background: rgba(73, 73, 73, 0.582);
+            padding: 2px;
+            border-radius: 5px;
+            backdrop-filter: blur(2px);
+            font-size: 16px;
+        }
+
+        /* Status-based color classes */
+        .title-online span {
+            color: #6DCFF6;
+        }
+
+        .status-online span {
+            color: #4C91AC;
+        }
+
+        .title span {
+            color: #E0FCC0;
+        }
+
+        .status span {
+            color: #91C257;
+        }
+
+        .title-offline span {
+            color: #979797;
+        }
+
+        .status-offline span {
+            color: #6E6E6E;
+        }
+
+        .title-busy span {
+            color: #FF8C00;
+        }
+
+        .status-busy span {
+            color: #FF6600;
+        }
+
+        .title-away span {
+            color: #E0FCC0;
+        }
+
+        .status-away span {
+            color: #65863c;
+        }
+
+        .title-snooze span {
+            color: #46788E;
+        }
+
+        .status-snooze span {
+            color: #355869;
+        }
+
+        .title-trade span {
+            color: #33CC33;
+        }
+
+        .status-trade span {
+            color: #00CC00;
+        }
+
+        .title-play span {
+            color: #00FF00;
+        }
+
+        .status-play span {
+            color: #00CC00;
+        }
+
+        .game span {
+            color: #91C257;
+        }
     </style>
 </head>
 
 <body>
     {{#each notifications}}
     <div class="notification">
-        <div class="content" style="position: relative;">
-            <!-- 背景图和虚化效果 -->
-            <div style="
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-image: url('{{this.gamelogo}}');
-                background-size: cover;
-                background-blend-mode: darken;
-                filter: blur(1.5px);
-                z-index: 0;
-                border-radius: 5px;
-                ">
-            </div>
-            <!-- 头像和内容 -->
-            <div class="avatar-container" style="position: relative; z-index: 1;">
-
+        <div class="content">
+            <div class="background-image" style="background-image: url('{{this.gamelogo}}');"></div>
+            <div class="avatar-container">
                 {{#if this.frameImg}}
                 <img class="imgframe" src="{{this.frameImg}}" alt="Avatar Frame">
                 {{/if}}
                 {{#if (or (eq this.profileStatusClass "offline") (eq this.profileStatusClass 0))}}
                 <div class="offline-overlay"></div>
                 {{/if}}
-                <img src="{{this.playerAvatarImg}}" alt="Avatar" width="64" height="64">
+                <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
             </div>
             <div class="text">
-                <!-- 通用的 Title 和 Status 结构 -->
                 <div class="{{#if (or (eq this.profileStatusClass " online") (eq this.profileStatusClass
-                    1))}}title-online {{else if (eq this.profileStatusClass "in-game" )}}title {{else if (or (eq
-                    this.profileStatusClass "offline" ) (eq this.profileStatusClass 0))}}title-offline {{else if (eq
-                    this.profileStatusClass 2)}}title-busy {{else if (eq this.profileStatusClass 3)}}title-away {{else
-                    if (eq this.profileStatusClass 4)}}title-snooze {{else if (eq this.profileStatusClass
-                    5)}}title-trade {{else if (eq this.profileStatusClass 6)}}title-play {{else}}title-offline{{/if}}">
+                    1))}}title-online{{else if (eq this.profileStatusClass "in-game" )}}title{{else if (or (eq
+                    this.profileStatusClass "offline" ) (eq this.profileStatusClass 0))}}title-offline{{else if (eq
+                    this.profileStatusClass 2)}}title-busy{{else if (eq this.profileStatusClass 3)}}title-away{{else if
+                    (eq this.profileStatusClass 4)}}title-snooze{{else if (eq this.profileStatusClass
+                    5)}}title-trade{{else if (eq this.profileStatusClass 6)}}title-play{{else}}title-offline{{/if}}">
                     <span>{{this.actualPersonaName}}</span>
                 </div>
+                {{#if this.profileStatus}}
                 <div class="small-gap"></div>
                 <div class="{{#if (or (eq this.profileStatusClass " online") (eq this.profileStatusClass
-                    1))}}status-online {{else if (eq this.profileStatusClass "in-game" )}}status {{else if (or (eq
-                    this.profileStatusClass "offline" ) (eq this.profileStatusClass 0))}}status-offline {{else if (eq
-                    this.profileStatusClass 2)}}status-busy {{else if (eq this.profileStatusClass 3)}}status-away {{else
-                    if (eq this.profileStatusClass 4)}}status-snooze {{else if (eq this.profileStatusClass
-                    5)}}status-trade {{else if (eq this.profileStatusClass 6)}}status-play
-                    {{else}}status-offline{{/if}}">
+                    1))}}status-online{{else if (eq this.profileStatusClass "in-game" )}}status{{else if (or (eq
+                    this.profileStatusClass "offline" ) (eq this.profileStatusClass 0))}}status-offline{{else if (eq
+                    this.profileStatusClass 2)}}status-busy{{else if (eq this.profileStatusClass 3)}}status-away{{else
+                    if (eq this.profileStatusClass 4)}}status-snooze{{else if (eq this.profileStatusClass
+                    5)}}status-trade{{else if (eq this.profileStatusClass 6)}}status-play{{else}}status-offline{{/if}}">
                     <span>{{this.profileStatus}}</span>
                 </div>
-                {{#unless (or (eq this.profileStatusClass "offline") (eq this.profileStatusClass 0))}}
+                {{/if}}
                 {{#if this.profileInGameName}}
                 <div class="small-gap"></div>
                 <div class="game"><span>{{this.profileInGameName}}</span></div>
                 {{/if}}
-                {{/unless}}
             </div>
-
         </div>
     </div>
     {{/each}}

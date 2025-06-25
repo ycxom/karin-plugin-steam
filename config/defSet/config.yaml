@@ -20,3 +20,16 @@ fetchSteamStatus: 'api'
 
 #支持使用 HTML爬取数据，xml爬取，降低流量消耗，api使用官方api爬取
 # 建议使用api模式
+
+#开启调试模式，开启后会打印更多日志
+debug: false
+
+#库存监听开关
+inventoryMonitorEnabled: true
+
+#库存监听间隔，越低越快更新，注意过快会消耗服务器流量资源，和导致被steam封ip
+inventoryMonitorInterval: 120000
+
+# true: 开启，会显示头像框
+# false: 关闭，不显示头像框，速度更快
+enableAvatarFrame: true

@@ -1,6 +1,6 @@
 // apps/UserSteam.js
 import { karin, segment, logger } from 'node-karin';
-import { getSteamIdByQQ } from '../lib/main/databaseOps.js';
+import { getSteamIdByQQ } from '../lib/db/databaseOps.js';
 import { fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
 import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js';
 

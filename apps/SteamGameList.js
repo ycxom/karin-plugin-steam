@@ -1,6 +1,6 @@
 // apps/SteamGameList.js
 import { karin, logger, segment } from 'node-karin';
-import { getSteamIdByQQ } from '../lib/main/databaseOps.js';
+import { getSteamIdByQQ } from '../lib/db/databaseOps.js';
 import { getSteamID } from '../lib/main/FriendCode.js';
 import { initAppList, fetchSteamLibrary, renderGamesToBase64, scheduleDailyUpdate } from '../lib/main/SteamInventory.js';
 

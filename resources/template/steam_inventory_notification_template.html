@@ -11,7 +11,6 @@
             width: 520px;
             box-sizing: border-box;
             background-color: #1b2838;
-            /* 默认背景色 */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -69,7 +68,6 @@
             z-index: 2;
             pointer-events: none;
         }
-
 
         .user-info .username {
             font-size: 24px;
@@ -129,6 +127,12 @@
             max-width: 75%;
         }
 
+        .game-price-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
         .game-price {
             background-color: rgba(103, 193, 245, 0.15);
             padding: 6px 12px;
@@ -138,6 +142,29 @@
             color: #67c1f5;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(103, 193, 245, 0.3);
+        }
+
+        .price-discount {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            padding: 3px 6px;
+            background-color: #4c6b22;
+            color: #a4d007;
+            font-weight: bold;
+            border-radius: 2px;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #738895;
+            font-size: 13px;
         }
 
         .game-dev-pub {
@@ -172,6 +199,30 @@
 
         .tag.metacritic::before {
             content: "★";
+            margin-right: 4px;
+        }
+
+        .tag.reviews {
+            background-color: rgba(103, 193, 245, 0.1);
+            color: #67c1f5;
+            display: flex;
+            align-items: center;
+        }
+
+        .tag.reviews::before {
+            content: "👍";
+            margin-right: 4px;
+            font-size: 12px;
+        }
+
+        .tag.dlc {
+            background-color: rgba(255, 196, 0, 0.1);
+            color: #ffc400;
+            border-color: rgba(255, 196, 0, 0.2);
+        }
+
+        .tag.dlc::before {
+            content: "📦";
             margin-right: 4px;
         }
 
@@ -269,6 +320,46 @@
             object-fit: cover;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .ratings-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rating-badge {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #8f98a0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .rating-badge::before {
+            content: "🔞";
+            margin-right: 4px;
+            font-size: 12px;
+        }
+
+        .achievements-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .achievement-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid rgba(103, 193, 245, 0.2);
+            background-color: rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 
@@ -286,14 +377,31 @@
                 <div class="title">游戏库新增提醒</div>
             </div>
         </div>
-
         {{#each newGames}}
         <div class="game-card">
             <img src="{{ this.header_image }}" alt="{{ this.name }}" class="game-header-image">
             <div class="game-content">
                 <div class="game-title-row">
                     <div class="game-title">{{ this.name }}</div>
-                    <div class="game-price">{{formatPrice this.price_overview}}</div>
+                    <div class="game-price-container">
+                        {{#if this.price_overview}}
+                        {{#if this.price_overview.discount_percent}}
+                        <div class="price-discount">
+                            <span class="discount-badge">-{{this.price_overview.discount_percent}}%</span>
+                            <span class="original-price">{{this.price_overview.initial_formatted}}</span>
+                        </div>
+                        <div class="game-price">{{this.price_overview.final_formatted}}</div>
+                        {{else}}
+                        <div class="game-price">{{this.price_overview.final_formatted}}</div>
+                        {{/if}}
+                        {{else}}
+                        {{#if this.is_free}}
+                        <div class="game-price">免费</div>
+                        {{else}}
+                        <div class="game-price">无价格信息</div>
+                        {{/if}}
+                        {{/if}}
+                    </div>
                 </div>
                 <div class="game-dev-pub">
                     开发商: {{#each this.developers}}{{this}}{{#unless @last}}, {{/unless}}{{/each}} |
@@ -303,35 +411,66 @@
                     {{#if this.metacritic}}
                     <span class="tag metacritic">{{ this.metacritic.score }}</span>
                     {{/if}}
+                    {{#if this.recommendations}}
+                    <span class="tag reviews">{{ this.recommendations.total }}+ 好评</span>
+                    {{/if}}
                     {{#each this.genres}}
                     <span class="tag">{{this.description}}</span>
                     {{/each}}
                     {{#if this.release_date}}
                     <span class="tag">{{this.release_date.date}}</span>
                     {{/if}}
+                    {{#if this.dlc}}
+                    <span class="tag dlc">{{this.dlc.length}} DLC</span>
+                    {{/if}}
                     <div class="platform-icons">
                         {{{platformIcons this.platforms}}}
                     </div>
                 </div>
+
                 <div class="section">
                     <div class="section-title">游戏简介</div>
                     <div class="section-content">{{ this.short_description }}</div>
                 </div>
+
                 <div class="section">
                     <div class="section-title">支持语言</div>
                     <div class="section-content lang">{{{cleanLanguages this.supported_languages}}}</div>
                 </div>
+
+                {{#if this.content_descriptors}}
+                <div class="ratings-row">
+                    {{#each this.content_descriptors.ids}}
+                    <div class="rating-badge">{{contentDescriptorName this}}</div>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                {{#if this.achievements}}
+                <div class="section">
+                    <div class="section-title">成就 ({{this.achievements.total}})</div>
+                    <div class="achievements-row">
+                        {{#each this.achievements.highlighted}}
+                        {{#if @index}}{{#if (lt @index 5)}}
+                        <img src="{{this.path}}" alt="{{this.name}}" class="achievement-icon" title="{{this.name}}">
+                        {{/if}}{{/if}}
+                        {{/each}}
+                    </div>
+                </div>
+                {{/if}}
+
                 {{#if this.screenshots}}
                 <div class="screenshots-row">
                     {{#each this.screenshots}}
+                    {{#if @index}}{{#if (lt @index 4)}}
                     <img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">
+                    {{/if}}{{/if}}
                     {{/each}}
                 </div>
                 {{/if}}
             </div>
         </div>
         {{/each}}
-
         <div class="footer">
             <span>{{formatDate}}</span>
             <span class="footer-steam-logo">STEAM</span>

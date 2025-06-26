@@ -36,4 +36,4 @@ export const steamFreebies = karin.command(
 /**
  * 启动定时更新
  */
-scheduleXXHUpdate()
+// scheduleXXHUpdate()

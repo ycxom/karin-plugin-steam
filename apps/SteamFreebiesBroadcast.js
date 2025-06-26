@@ -6,7 +6,6 @@ import { dirPath } from '../lib/config.js'
 
 
 const DATA_FILE = path.join(dirPath, 'data/data.yaml');
-const TEMPLATE_FILE = path.join(dirPath, 'resources/template/steamFreebiesTemplate.html')
 
 /**
  * 更新 data.yaml 文件，将启动的群聊ID写入并设置状态

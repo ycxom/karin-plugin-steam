@@ -1,11 +1,5 @@
 import { karin, logger } from 'node-karin';
-import {
-    getSteamIdByQQ,
-    setUserGroupBroadcast,
-    setUserGroupInventoryBroadcast,
-    setUserAllGroupsBroadcast,
-    setUserAllGroupsInventoryBroadcast
-} from '../lib/db/databaseOps.js';
+import { getSteamIdByQQ, setUserGroupBroadcast, setUserGroupInventoryBroadcast, setUserAllGroupsBroadcast, setUserAllGroupsInventoryBroadcast } from '../lib/db/databaseOps.js';
 
 // 开启/关闭本群我的Steam播报
 export const toggleMyGroupSteamBroadcast = karin.command(

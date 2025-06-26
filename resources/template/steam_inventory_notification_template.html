@@ -10,8 +10,6 @@
             margin: 0;
             width: 520px;
             box-sizing: border-box;
-            background-color: #1b2838;
-            /* 默认背景色 */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -272,7 +270,7 @@
     </style>
 </head>
 
-<body {{#if backgroundUrl}}style="background-image: url('{{ backgroundUrl }}');" {{/if}}>
+<body style="background-image: url('{{ backgroundUrl }}');">
     <div class="overlay">
         <div class="header">
             <div class="avatar-container">
@@ -324,7 +322,9 @@
                 {{#if this.screenshots}}
                 <div class="screenshots-row">
                     {{#each this.screenshots}}
-                    <img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">
+                    {{#if (eq @index 0)}}<img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">{{/if}}
+                    {{#if (eq @index 1)}}<img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">{{/if}}
+                    {{#if (eq @index 2)}}<img src="{{ this.path_thumbnail }}" alt="截图" class="screenshot">{{/if}}
                     {{/each}}
                 </div>
                 {{/if}}

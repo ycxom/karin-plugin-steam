@@ -1,125 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steam 好友状态</title>
+  <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css" />
   <style>
-    /* 全局样式 */
+    :root {
+      --primary-bg: rgba(27, 40, 56, 0.92);
+      --secondary-bg: rgba(42, 71, 94, 0.85);
+      --header-bg: rgba(23, 26, 33, 0.95);
+      --accent-color: #66c0f4;
+      --text-color: #c7d5e0;
+      --highlight-color: #a3cf06;
+      --online-color: #57cbde;
+      --offline-color: #898989;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', 'Arial', sans-serif;
     }
 
     body {
+      font-family: "LXGW WenKai", "Segoe UI", sans-serif;
+      background-image: url("{{{ backgroundDataUri }}}");
       background-color: #1b2838;
-      /* Steam深蓝色背景 */
-      color: #c7d5e0;
-      padding: 20px;
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 25px;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 610px;
+      max-width: 750px;
       margin: 0 auto;
-      background-color: #1f3347;
+      background-color: var(--primary-bg);
       border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(102, 192, 244, 0.2);
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      padding-bottom: 15px;
     }
 
-    /* 标题样式 */
-    .header {
-      background-color: #171a21;
-      padding: 15px;
+    header {
+      background-color: var(--header-bg);
+      color: white;
+      padding: 20px;
+      font-size: 26px;
+      font-weight: bold;
       text-align: center;
-      border-bottom: 1px solid #4a63a7;
-    }
-
-    .header img {
-      height: 32px;
-      margin-bottom: 10px;
-    }
-
-    .header h1 {
-      color: #ffffff;
-      font-size: 22px;
-      font-weight: 600;
-    }
-
-    /* 类别标题 */
-    .section-header {
+      border-bottom: 1px solid rgba(102, 192, 244, 0.25);
       display: flex;
       align-items: center;
-      padding: 12px 15px;
-      background-color: #2a475e;
-      margin: 15px 0 10px 0;
-      position: relative;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      justify-content: center;
+      gap: 15px;
     }
 
-    .section-header h2 {
-      font-size: 18px;
-      font-weight: 600;
-      color: #66c0f4;
+    .steam-logo {
+      width: 30px;
+      height: 30px;
+      filter: drop-shadow(0 0 5px var(--accent-color));
     }
 
-    .section-header .count {
-      margin-left: 10px;
-      background-color: #66c0f4;
-      color: #1b2838;
+    .category {
+      padding: 20px;
+      border-bottom: 1px solid rgba(102, 192, 244, 0.15);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .category:last-of-type {
+      border-bottom: none;
+    }
+
+    .category-title {
+      color: var(--accent-color);
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      padding-left: 10px;
+      border-left: 3px solid var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .category-title .count {
+      background-color: var(--accent-color);
+      color: var(--header-bg);
       font-size: 14px;
       font-weight: bold;
-      padding: 2px 8px;
+      padding: 1px 9px;
       border-radius: 12px;
     }
 
-    /* 好友条目 */
-    .friend {
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background-color: var(--secondary-bg);
+      border-radius: 8px;
+      padding: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
       display: flex;
       align-items: center;
-      padding: 10px 15px;
-      margin: 5px 15px;
-      background-color: rgba(42, 71, 94, 0.4);
-      border-radius: 8px;
-      transition: all 0.2s ease;
+      gap: 12px;
     }
 
-    .friend:hover {
-      background-color: rgba(42, 71, 94, 0.8);
-      transform: translateY(-2px);
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      background-color: rgba(50, 80, 105, 0.9);
     }
 
-    /* 头像框 */
     .avatar-frame {
       position: relative;
       width: 48px;
       height: 48px;
-      margin-right: 12px;
-      border-radius: 4px;
+      border-radius: 6px;
       overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .avatar-frame:hover {
+      transform: scale(1.05);
     }
 
     .avatar {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 4px;
     }
 
     .frame {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: -5px;
+      left: -5px;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
       z-index: 2;
     }
 
-    /* 用户详情 */
     .details {
       flex: 1;
+      overflow: hidden;
     }
 
     .name {
@@ -133,179 +182,160 @@
 
     .status {
       font-size: 14px;
-      opacity: 0.8;
+      opacity: 0.9;
     }
 
     .game-name {
       font-weight: 600;
-      margin-top: 2px;
-      color: #a3cf06;
+      color: var(--highlight-color);
     }
 
-    /* 状态颜色 */
-    .online .name {
-      color: #57cbde;
-    }
-
-    .offline .name {
-      color: #898989;
-    }
-
+    /* Status Colors */
     .in-game .name {
-      color: #a3cf06;
-    }
-
-    .online.avatar-frame {
-      box-shadow: 0 0 0 2px #57cbde;
-    }
-
-    .offline.avatar-frame {
-      box-shadow: 0 0 0 2px #898989;
+      color: var(--highlight-color);
     }
 
     .in-game.avatar-frame {
-      box-shadow: 0 0 0 2px #a3cf06;
+      border-color: var(--highlight-color);
     }
 
-    /* 状态指示器 */
-    .status-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 6px;
+    .online .name {
+      color: var(--online-color);
     }
 
-    .online .status-indicator {
-      background-color: #57cbde;
+    .online.avatar-frame {
+      border-color: var(--online-color);
     }
 
-    .offline .status-indicator {
-      background-color: #898989;
+    .offline .name {
+      color: var(--offline-color);
     }
 
-    .in-game .status-indicator {
-      background-color: #a3cf06;
+    .offline.avatar-frame {
+      border-color: var(--offline-color);
     }
 
-    /* 空状态 */
     .empty-state {
       text-align: center;
-      padding: 10px;
-      color: #8a8a8a;
+      padding: 20px;
+      color: var(--text-color);
       font-style: italic;
+      background-color: var(--secondary-bg);
+      border-radius: 8px;
     }
 
-    /* 页脚 */
-    .footer {
+    footer {
       text-align: center;
       padding: 15px;
-      font-size: 12px;
-      color: #647580;
-      margin-top: 10px;
+      font-size: 13px;
+      color: #8f98a0;
+      background-color: var(--header-bg);
+    }
+
+    .highlight {
+      color: var(--highlight-color);
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="header">
-      <img
-        src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgODAiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0xMjcuNzgsMzguNGMwLTQuOTMtMi41LTYuNzktNi42Ny02Ljc5aC01LjU2VjQ1LjA4aDQuNzJDMTI1LjM5LDQ1LjA4LDEyNy43OCw0My4yMiwxMjcuNzgsMzguNFptMTYuMiw2LjY4YzAsLjgxLS41NywxLjQ5LTEuNTQsMS40OS0xLDAtMS41NS0uNjgtMS41NS0xLjQ5VjM2LjM5YzAtLjgyLjU4LTEuNTEsMS41NS0xLjUxLDEsMCwxLjU0LjY5LDEuNTQsMS41MVptMTAyLDYuODJIMjQzLjU3YzEuNTktMS44OSwyLjYyLTQuNSwyLjYyLTcuNjQsMC00LjE1LTEuNDItNy4yNi00LjI1LTkuMTUsMi44My0xLjc2LDQuMjUtNC43OSw0LjI1LTguNjcsMC03LjI2LTQuNi0xMi0xMi0xMkgyMTguOHYzNy41aDEyLjg2YzguMDksMCwxNC4zMS01LjE5LDE0LjMxLTEyLjgxWm0tODIuODYsMGgtOS44MVYzNi4zOWMwLTMuMjgtMi4zMi01LjI1LTUuNDYtNS4yNXMtNS40NiwxLjkyLTUuNDYsNS4yNVY1MS45MWgtOS44MVYzNi4zOWMwLTMuMjgtMi4zMi01LjI1LTUuNDYtNS4yNXMtNS40NiwxLjkyLTUuNDYsNS4yNVY1MS45MWgtOS44MVYzNi4zOWMwLTguNDMsNi43Ny0xNC4zMSwxNS4yNy0xNC4zMSw0LjI0LDAsNy40NywxLjI4LDkuODEsMy43MywyLjMzLTIuNDUsNS41Ni0zLjczLDkuODEtMy43Myw4LjQ5LDAsMTUuMzgsNS44OCwxNS4zOCwxNC4zMVpNMjI5LjM4LDM3Ljg5YzAtNC44Mi0yLjU2LTYuNjgtNi42Mi02LjY4aC01LjVWNDQuNDdoNS41QzIyNi44Miw0NC40NywyMjkuMzgsNDIuNzEsMjI5LjM4LDM3Ljg5Wm0tNTIuNzMsMGMwLTExLjUzLDguNzYtMTYuMTUsMTcuODgtMTYuMTVzMTcuODcsNC42MiwxNy44NywxNi4xNS04LjU1LDE2LjE1LTE3Ljg3LDE2LjE1UzE3Ni42NSw0OS41MiwxNzYuNjUsMzcuODlabTI4LjA5LDBjMC03LjI2LTMuODgtMTAuMDgtMTAuMjEtMTAuMDhTMTg0LjMxLDMwLjYzLDE4NC4zMSwzNy44OXMzLjg5LDEwLjA4LDEwLjIyLDEwLjA4UzIwNC43NCw0NS4wOCwyMDQuNzQsMzcuODlaTTEzNi42NCw1MS45MWgtOS45M1YzNi4zOWMwLTguNDMsNi40Ny0xNC4zMSwxNS41My0xNC4zMSwzLjc5LDAsNi42OCwxLjM1LDcuNDcsMS44OXY4LjY4Yy0xLjE0LS44MS0zLjE5LTEuNzYtNi0xLjc2LTMuMTQsMC01LjQ3LDEuOTItNS40Nyw1LjI1VjUxLjkxaC0xLjU5Wm0tMTkuNTEsMGgtOS44MVYyMi4wOWg5LjgxVjUxLjkxWk0xMDQuODksMzcuODljMC0xMS41Myw4Ljc2LTE2LjE1LDE3Ljg4LTE2LjE1czE3Ljg3LDQuNjIsMTcuODcsMTYuMTUtOC41NSwxNi4xNS0xNy44NywxNi4xNVMxMDQuODksNDkuNTIsMTA0Ljg5LDM3Ljg5Wm0yOC4wOSwwYzAtNy4yNi0zLjg4LTEwLjA4LTEwLjIxLTEwLjA4UzExMi41NiwzMC42MywxMTIuNTYsMzcuODlzMy44OCwxMC4wOCwxMC4yMSwxMC4wOFMxMzMsMDAsNDUuMDgsMTMyLjk4LDM3Ljg5Wk03NS4yNywzMS41M2MwLTUuMjMsNC4xNS05LjQ0LDkuNDYtOS40NCw1LjIzLDAsOS40Nyw0LjIxLDkuNDcsOS40NGEzLjgzLDMuODMsMCwwLDEtNy42Ni0uMzRjMC0xLTEtMS40NC0xLjg5LTEuNDQtMSwwLTEuODkuNjctMS44OSwxLjc4djMuN2MwLDEuMTEuOTIsMS43NywxLjg5LDEuNzdsLjIzLDBjMTAuNDUsMCwxOC45LDcuODksMTguOSwxNy42N0MxMDMuNzgsNjUuNDQsOTMuNzIsNzUsODQuNzYsNzVBMjkuODksMjkuODksMCwwLDEsNzUuMjcsNzIuMjJhNDcuNzksNDcuNzksMCwwLDEtMTEuNzEtNy42N0E0Ny42OSw0Ny42OSwwLDAsMSw1Miw1My44M2EyOS43OSwyOS43OSwwLDAsMS0yLjc3LTkuNDVjMC05LC4xMS0yMy43NS0uMTItMjUuNzJaIi8+PC9zdmc+"
-        alt="Steam Logo">
-      <h1>Steam好友状态</h1>
-    </div>
-
-    <!-- 游戏中 -->
-    <div class="section-header">
-      <h2>游戏中</h2>
-      <span class="count">{{inGameFriends.length}}</span>
-    </div>
-
-    {{#if inGameFriends.length}}
-    {{#each inGameFriends}}
-    <div class="friend">
-      <div class="avatar-frame {{this.profileStatusClass}}">
-        {{#if this.frameImg}}
-        <img class="frame" src="{{this.frameImg}}" alt="Frame">
-        {{/if}}
-        <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+    <header>
+      <img src="{{logoDataUri}}" class="steam-logo" alt="Steam Logo">
+      Steam 好友状态
+    </header>
+    <div class="category">
+      <div class="category-title">
+        <span>游戏中</span>
+        <span class="count">{{inGameFriends.length}}</span>
       </div>
-      <div class="details">
-        <div class="name {{this.profileStatusClass}}">{{this.actualPersonaName}}</div>
-        <div class="status {{this.profileStatusClass}}">
-          <span class="status-indicator"></span>
-          {{this.profileStatus}}
-          {{#if this.profileInGameName}}
-          <div class="game-name">正在游玩: {{this.profileInGameName}}</div>
-          {{/if}}
+      {{#if inGameFriends.length}}
+      <div class="card-grid">
+        {{#each inGameFriends}}
+        <div class="card">
+          <div class="avatar-frame in-game">
+            {{#if this.frameImg}}<img class="frame" src="{{this.frameImg}}" alt="Frame">{{/if}}
+            <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+          </div>
+          <div class="details">
+            <div class="name in-game">{{this.actualPersonaName}}</div>
+            <div class="status">
+              <div class="game-name">{{this.profileInGameName}}</div>
+            </div>
+          </div>
         </div>
+        {{/each}}
       </div>
+      {{else}}
+      <div class="empty-state">耶！风平浪静，摸鱼大吉！</div>
+      {{/if}}
     </div>
-    {{/each}}
-    {{else}}
-    <div class="empty-state">暂无好友在游戏中</div>
-    {{/if}}
-
-    <!-- 在线 -->
-    <div class="section-header">
-      <h2>在线</h2>
-      <span class="count">{{onlineFriends.length}}</span>
-    </div>
-
-    {{#if onlineFriends.length}}
-    {{#each onlineFriends}}
-    <div class="friend">
-      <div class="avatar-frame {{this.profileStatusClass}}">
-        {{#if this.frameImg}}
-        <img class="frame" src="{{this.frameImg}}" alt="Frame">
-        {{/if}}
-        <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+    <div class="category">
+      <div class="category-title">
+        <span>在线摸鱼</span>
+        <span class="count">{{onlineFriends.length}}</span>
       </div>
-      <div class="details">
-        <div class="name {{this.profileStatusClass}}">{{this.actualPersonaName}}</div>
-        <div class="status {{this.profileStatusClass}}">
-          <span class="status-indicator"></span>
-          {{this.profileStatus}}
+      {{#if onlineFriends.length}}
+      <div class="card-grid">
+        {{#each onlineFriends}}
+        <div class="card">
+          <div class="avatar-frame online">
+            {{#if this.frameImg}}<img class="frame" src="{{this.frameImg}}" alt="Frame">{{/if}}
+            <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+          </div>
+          <div class="details">
+            <div class="name online">{{this.actualPersonaName}}</div>
+            <div class="status">{{this.profileStatus}}</div>
+          </div>
         </div>
+        {{/each}}
       </div>
+      {{else}}
+      <div class="empty-state">空空如也，快去叫人上线！</div>
+      {{/if}}
     </div>
-    {{/each}}
-    {{else}}
-    <div class="empty-state">暂无好友在线</div>
-    {{/if}}
-
-    <!-- 离线 -->
-    <div class="section-header">
-      <h2>离线</h2>
-      <span class="count">{{offlineFriends.length}}</span>
-    </div>
-
-    {{#if offlineFriends.length}}
-    {{#each offlineFriends}}
-    <div class="friend">
-      <div class="avatar-frame {{this.profileStatusClass}}">
-        {{#if this.frameImg}}
-        <img class="frame" src="{{this.frameImg}}" alt="Frame">
-        {{/if}}
-        <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+    <div class="category">
+      <div class="category-title">
+        <span>离线潜水</span>
+        <span class="count">{{offlineFriends.length}}</span>
       </div>
-      <div class="details">
-        <div class="name {{this.profileStatusClass}}">{{this.actualPersonaName}}</div>
-        <div class="status {{this.profileStatusClass}}">
-          <span class="status-indicator"></span>
-          {{this.profileStatus}}
+      {{#if offlineFriends.length}}
+      <div class="card-grid">
+        {{#each offlineFriends}}
+        <div class="card">
+          <div class="avatar-frame offline">
+            {{#if this.frameImg}}<img class="frame" src="{{this.frameImg}}" alt="Frame">{{/if}}
+            <img class="avatar" src="{{this.playerAvatarImg}}" alt="Avatar">
+          </div>
+          <div class="details">
+            <div class="name offline">{{this.actualPersonaName}}</div>
+            <div class="status">{{this.profileStatus}}</div>
+          </div>
         </div>
+        {{/each}}
       </div>
+      {{else}}
+      <div class="empty-state">大家都去享受现实生活啦～</div>
+      {{/if}}
     </div>
-    {{/each}}
-    {{else}}
-    <div class="empty-state">暂无离线好友</div>
-    {{/if}}
-
-    <div class="footer">
-      数据更新时间: {{formatDate}}
-    </div>
+    <footer>
+      Powered by Karin<span class="highlight"> & </span>Karin-plugin-steam
+    </footer>
   </div>
 </body>
 

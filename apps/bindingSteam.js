@@ -2,7 +2,7 @@ import { karin, segment, logger } from 'node-karin'
 import { getSteamIdByQQ } from '../lib/db/databaseOps.js'
 import { fetchSteamStatus } from '../lib/main/fetchSteamStatus.js'
 import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js'
-import { fetchSteamLibrary, renderGamesToBase64 } from '../lib/main/SteamInventory.js'
+import { renderLibraryImage } from '../lib/main/SteamInventory.js'
 
 /**
  * #查询steam xxx
@@ -138,15 +138,10 @@ export const queryMySteamLibrary = karin.command(
       return e.reply('未绑定Steam账号。请使用 #绑定steam 好友代码/steamid/自定义URL');
     }
     try {
-      const games = await fetchSteamLibrary(steamID);
-      if (games && games.length > 0) {
-        const base64Content = await renderGamesToBase64(games);
-        logger.log(`[queryMySteamLibrary] 准备发送游戏库信息到群聊`);
-        return e.reply(segment.image(`base64://${base64Content}`));
-      } else {
-        logger.warn(`[queryMySteamLibrary] 用户 ${steamID} 无游戏或获取失败`);
-        return e.reply(`用户 ${steamID} 没有游戏或获取游戏库失败`);
-      }
+      e.reply("正在生成您的库存图片，请稍候...", true);
+      const base64Content = await renderLibraryImage(steamID);
+      logger.log(`[queryMySteamLibrary] 准备发送游戏库信息`);
+      return e.reply(segment.image(`base64://${base64Content}`), true);
     } catch (error) {
       logger.error('查询 Steam 库存失败:', error);
       return e.reply('查询失败，请稍后再试');

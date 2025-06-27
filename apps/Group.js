@@ -1,7 +1,7 @@
 // apps/Group.js
 import { karin, segment, logger } from 'node-karin';
 import { getSteamIdByQQ, addSteamIdToGroup, removeSteamIdFromGroup, getSteamIdsInGroup } from '../lib/db/databaseOps.js';
-import { fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
+import { fetchPlayersSummariesAPI, fetchPlayerProfileAPI } from '../lib/main/fetchSteamStatus.js';
 import { generateSteamUI } from '../lib/common/generateSteamUI.js';
 import { debuglog } from '../lib/debuglog.js';
 
@@ -63,29 +63,80 @@ export const leaveSteamGroup = karin.command(
 );
 
 /**
- * #查看群聊steam
+ * #查看群聊steam (已优化)
  */
 export const querySteamGroup = karin.command(
   /^#查看群聊[Ss]team$/,
   async (e) => {
     const groupId = String(e.groupId);
     try {
-      const steamIDs = await getSteamIdsInGroup(groupId); // 这里最好当成异步
+      const steamIDs = await getSteamIdsInGroup(groupId);
       if (!steamIDs || steamIDs.length === 0) {
         return e.reply(`群聊 ${groupId} 中没有绑定任何 Steam ID`);
       }
+
+      // 1. 使用新API批量获取用户信息
+      const playersSummaries = await fetchPlayersSummariesAPI(steamIDs);
+      if (playersSummaries.size === 0) {
+        return e.reply(`群聊 ${groupId} 中未能获取到任何有效的 Steam 状态。`);
+      }
+
       const steamStatuses = [];
+      const profilePromises = [];
+
+      // 2. 准备并行获取头像框等详细信息
       for (const steamID of steamIDs) {
-        try {
-          const status = await fetchSteamStatus(steamID);
-          if (status) steamStatuses.push(status);
-        } catch (err) {
-          logger.error(`获取SteamID ${steamID} 状态失败:`, err);
+        if (playersSummaries.has(steamID)) {
+          profilePromises.push(
+            fetchPlayerProfileAPI(steamID).then(profile => ({ steamID, profile }))
+          );
         }
       }
-      if (steamStatuses.length === 0) {
-        return e.reply(`群聊 ${groupId} 中未能获取有效的 Steam 状态`);
+
+      const profiles = await Promise.all(profilePromises);
+      const profileMap = new Map(profiles.map(p => [p.steamID, p.profile]));
+
+      // 3. 构建UI所需的数据结构
+      for (const steamID of steamIDs) {
+        const summary = playersSummaries.get(steamID);
+        if (!summary) continue;
+
+        const profile = profileMap.get(steamID);
+        const personastate = summary.personastate || 0;
+        const isInGame = !!summary.gameextrainfo;
+
+        let profileStatusClass = 'offline';
+        let profileStatusText = '当前离线';
+
+        const statusMap = {
+          1: '在线', 2: '正忙', 3: '离开', 4: '打盹',
+          5: '想交易', 6: '想玩游戏'
+        };
+
+        if (isInGame) {
+          profileStatusClass = 'in-game';
+          profileStatusText = '当前正在游戏';
+        } else if (personastate > 0) {
+          profileStatusClass = 'online';
+          profileStatusText = statusMap[personastate] || '在线';
+        }
+
+        steamStatuses.push({
+          actualPersonaName: summary.personaname,
+          profileStatus: profileStatusText,
+          profileInGameName: summary.gameextrainfo || '',
+          playerAvatarImg: summary.avatarfull,
+          frameImg: profile ? profile.frameImg : null, // 使用 fetchPlayerProfileAPI 获取的数据
+          profileStatusClass: profileStatusClass,
+          steamid: steamID
+        });
       }
+
+      if (steamStatuses.length === 0) {
+        return e.reply(`群聊 ${groupId} 中未能获取到任何有效的 Steam 状态。`);
+      }
+
+      // 4. 生成并发送图片
       const base64Image = await generateSteamUI(steamStatuses);
       return e.reply(segment.image(`base64://${base64Image}`));
     } catch (error) {
@@ -100,6 +151,7 @@ export const querySteamGroup = karin.command(
     permission: 'all'
   }
 );
+
 
 // 推荐用默认导出多个命令数组
 export default [

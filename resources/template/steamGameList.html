@@ -1,185 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steam Game List</title>
+    <title>Steam 游戏库</title>
+    <link rel="stylesheet" href="https://npm.elemecdn.com/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary-bg: rgba(27, 40, 56, 0.94);
+            --secondary-bg: rgba(42, 71, 94, 0.88);
+            --header-bg: rgba(23, 26, 33, 0.96);
+            --accent-color: #66c0f4;
+            --text-color: #c7d5e0;
+            --highlight-color: #a3cf06;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #1b2838; /* Steam深蓝色背景 */
-            color: #fff;
-            padding: 20px;
-            max-width: 1080px;
+            font-family: "LXGW WenKai", "Segoe UI", sans-serif;
+            background-image: url("{{{ backgroundDataUri }}}");
+            background-color: #1b2838;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 50px; /* 适配更宽的视口 */
+        }
+        .container {
+            max-width: 2440px; /* 适配更宽的视口 */
             margin: 0 auto;
+            background-color: var(--primary-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(102, 192, 244, 0.2);
+            overflow: hidden;
         }
-        .header {
-            font-size: 28px;
-            font-weight: bold;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: rgba(42, 71, 94, 0.7);
-            border-radius: 8px;
-        }
-        .stats {
+        header {
+            background-color: rgba(23, 26, 33, 0.6);
+            padding: 30px 40px;
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-            background-color: rgba(42, 71, 94, 0.5);
-            padding: 12px;
-            border-radius: 8px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 25px;
+            border-bottom: 1px solid rgba(102, 192, 244, 0.25);
         }
-        .stat-item {
-            text-align: center;
-            padding: 8px 15px;
+        .avatar-container {
+            position: relative;
+            width: 100px; /* 增大头像 */
+            height: 100px;
+            flex-shrink: 0;
         }
-        .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #66c0f4;
-        }
-        .stat-label {
-            font-size: 14px;
-            color: #acdbf5;
-            margin-top: 5px;
-        }
+        .avatar { width: 100%; height: 100%; border-radius: 10px; border: 3px solid var(--accent-color); }
+        .avatar-frame { position: absolute; top: -12px; left: -12px; width: calc(100% + 24px); height: calc(100% + 24px); z-index: 2; }
+        .user-info .username { font-size: 36px; font-weight: 700; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,.5); }
+        .user-info .subtitle { font-size: 22px; color: var(--accent-color); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); background-color: rgba(0,0,0,0.2); padding: 20px 0; }
+        .stat-item { text-align: center; border-right: 1px solid rgba(102, 192, 244, 0.15); }
+        .stat-item:last-child { border-right: none; }
+        .stat-value { font-size: 30px; font-weight: bold; color: #fff; }
+        .stat-label { font-size: 16px; color: var(--text-color); }
+
         .content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-            gap: 15px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat({{stats.columns}}, 1fr);
+            gap: 25px; /* 增大卡片间距 */
         }
-        .freebie {
-            background-color: #2a475e; /* Steam蓝色面板 */
+
+        .game-card {
+            background: var(--secondary-bg);
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             overflow: hidden;
-            width: calc(20% - 12px); /* 每行5个游戏 */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 15px;
+            transition: transform .2s ease, box-shadow .2s ease;
+            border: 1px solid rgba(0,0,0,0.2);
         }
-        .freebie img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-bottom: 2px solid #1b2838;
-        }
-        .game-info {
-            padding: 12px;
-        }
-        .title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #66c0f4; /* Steam亮蓝色 */
-            margin-bottom: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .info {
-            font-size: 14px;
-            color: #acdbf5; /* 浅蓝色 */
-        }
-        .freebie:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        }
-        
-        /* 高亮显示游戏时间排名前10的游戏 */
-        .freebie:nth-child(-n+10) {
-            border: 2px solid #66c0f4;
-        }
-        .freebie:nth-child(-n+10) .title:after {
-            content: " ★";
-            color: #ff9900;
-        }
-        
-        /* 响应式布局 */
-        @media (max-width: 1080px) {
-            .freebie {
-                width: calc(25% - 12px); /* 屏幕变小时，每行4个 */
-            }
-        }
-        @media (max-width: 800px) {
-            .freebie {
-                width: calc(33.33% - 10px); /* 更小屏幕，每行3个 */
-            }
-        }
-        
-        /* 只展示最多前100个游戏，防止图片过长 */
-        .show-more-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #66c0f4;
-            color: #1b2838;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-        }
-        
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            margin-bottom: 15px;
-        }
-        
-        .page-info {
-            background-color: rgba(42, 71, 94, 0.7);
-            color: #acdbf5;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        .game-card img { width: 100%; height: auto; display: block; background-color: #171a21; aspect-ratio: 460 / 215; }
+        .game-info { padding: 15px; }
+        .game-title { font-size: 18px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 6px; }
+        .playtime { font-size: 16px; color: var(--accent-color); }
+        .game-card.highlight { border: 3px solid var(--highlight-color); }
+        .game-card.highlight .game-title { color: var(--highlight-color); }
+        .footer { text-align: center; padding: 20px; font-size: 16px; color: #8f98a0; background-color: var(--header-bg); }
+        .highlight { color: var(--highlight-color); font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="header">Steam游戏库统计</div>
-    
-    <div class="stats">
-        <div class="stat-item">
-            <div class="stat-value">{{gameCount}}</div>
-            <div class="stat-label">游戏总数</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{totalHours}}</div>
-            <div class="stat-label">总游戏时长(小时)</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{totalDays}}</div>
-            <div class="stat-label">总游戏时长(天)</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">{{recentlyPlayedCount}}</div>
-            <div class="stat-label">两周内活跃游戏</div>
-        </div>
-    </div>
-    
-    <div class="pagination">
-        <div class="page-info">游戏时长排行</div>
-    </div>
-    
-    <div class="content">
-        {{#each freebies}}
-        <div class="freebie">
-            <img src="{{this.coverUrl}}" alt="封面图" loading="lazy">
-            <div class="game-info">
-                <div class="title">{{this.title}}</div>
-                <div class="info">{{this.description}}</div>
+    <div class="container">
+        <header>
+            <div class="avatar-container">
+                {{#if user.frameImg}}<img src="{{user.frameImg}}" class="avatar-frame">{{/if}}
+                <img src="{{user.playerAvatarImg}}" class="avatar">
+            </div>
+            <div class="user-info">
+                <div class="username">{{user.actualPersonaName}}</div>
+                <div class="subtitle">的游戏库</div>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">{{stats.gameCount}}</div>
+                <div class="stat-label">游戏总数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{stats.totalHours}}</div>
+                <div class="stat-label">总时长 (小时)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{stats.totalDays}}</div>
+                <div class="stat-label">总时长 (天)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{stats.recentlyPlayedCount}}</div>
+                <div class="stat-label">近期活跃</div>
             </div>
         </div>
-        {{/each}}
+
+        <div class="content">
+            {{#each games}}
+            <div class="game-card {{#if highlight}}highlight{{/if}}">
+                <img src="{{this.coverUrl}}" alt="{{this.title}}" loading="lazy">
+                <div class="game-info">
+                    <div class="game-title">{{this.title}}</div>
+                    <div class="playtime">{{this.playtimeFormatted}}</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        
+        <footer >
+            数据生成时间: {{formatDate}}
+        </footer>
     </div>
 </body>
 </html>

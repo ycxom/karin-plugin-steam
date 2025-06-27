@@ -2,7 +2,8 @@
 import { karin, logger, segment } from 'node-karin';
 import { getSteamIdByQQ } from '../lib/db/databaseOps.js';
 import { getSteamID } from '../lib/main/FriendCode.js';
-import { initAppList, fetchSteamLibrary, renderGamesToBase64, scheduleDailyUpdate } from '../lib/main/SteamInventory.js';
+// import { initAppList, fetchSteamLibrary, renderGamesToBase64, scheduleDailyUpdate } from '../lib/main/SteamInventory.js';
+import { initAppList, fetchSteamLibrary, renderGamesToBase64 } from '../lib/main/SteamInventory.js';
 
 // 指令：#查询steam库存 用户ID
 export const steamLibraryCommand = karin.command(
@@ -74,12 +75,3 @@ export const steamUserLibraryCommand = karin.command(
         permission: 'all'
     }
 );
-
-// 初始化时加载游戏列表与定时更新
-initAppList()
-    .then(() => {
-        logger.log('[Karin-plugin-steam] 游戏列表初始化成功');
-        scheduleDailyUpdate();
-        logger.log('[Karin-plugin-steam] 每日游戏列表更新任务已安排');
-    })
-    .catch(err => logger.error(`[Karin-plugin-steam] 游戏列表初始化失败: ${err.message}`));

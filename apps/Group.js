@@ -3,6 +3,7 @@ import { karin, segment, logger } from 'node-karin';
 import { getSteamIdByQQ, addSteamIdToGroup, removeSteamIdFromGroup, getSteamIdsInGroup } from '../lib/db/databaseOps.js';
 import { fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
 import { generateSteamUI } from '../lib/common/generateSteamUI.js';
+import { debuglog } from '../lib/debuglog.js';
 
 /**
  * #steam加入群聊
@@ -13,7 +14,7 @@ export const joinSteamGroup = karin.command(
     const qq = e.sender.userId
     const groupId = String(e.groupId);
     const steamID = await getSteamIdByQQ(qq);
-    logger.debug(`{steamID}: ${steamID}, QQ: ${qq}, Group ID: ${groupId}`);
+    debuglog(`{steamID}: ${steamID}, QQ: ${qq}, Group ID: ${groupId}`);
     if (!steamID) {
       return e.reply('请先绑定 Steam 账号，再加入群聊。');
     }

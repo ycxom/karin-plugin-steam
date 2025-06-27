@@ -93,23 +93,6 @@ export const disableSteamBroadcastFeature = karin.command(
   }
 );
 
-// 插件初始化（自动检测是否全局启用监控）
-onPluginLoad();
-export async function onPluginLoad() {
-  if (Config.steamBroadcastEnabled) {
-    logger.debug('[onPluginLoad] 状态播报已启用，启动状态监控');
-    startMonitoring();
-  } else {
-    logger.debug('[onPluginLoad] 状态播报未全局启用');
-  }
-
-  // ✅ 启动库存监控 (可以为其添加独立的配置开关)
-  if (Config.inventoryMonitorEnabled) { // 建议在config.yaml中添加此开关
-    logger.debug('[onPluginLoad] 库存监控已启用，启动库存监控任务');
-    startInventoryMonitoring();
-  }
-}
-
 // 默认导出
 export default [
   startSteamBroadcast,

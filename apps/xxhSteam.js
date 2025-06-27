@@ -1,5 +1,6 @@
 import { logger, segment, karin } from 'node-karin';
-import {fetchSteamFreebies,renderHtml,captureScreenshotAsBase64,generateSteamLinksMessage,scheduleXXHUpdate} from '../lib/common/xxhFree.js'
+import { fetchSteamFreebies, renderHtml, captureScreenshotAsBase64, generateSteamLinksMessage } from '../lib/common/xxhFree.js';
+
 /**
  * Command: #steam喜加一
  */
@@ -28,12 +29,8 @@ export const steamFreebies = karin.command(
     },
     {
         name: 'steam_freebies',
+        desc: '获取最新的Steam免费游戏信息',
         priority: 1000,
         permission: 'everyone'
     }
 );
-
-/**
- * 启动定时更新
- */
-// scheduleXXHUpdate()

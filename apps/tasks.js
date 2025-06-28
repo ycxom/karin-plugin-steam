@@ -33,7 +33,7 @@ async function initializePluginTasks() {
     }
 
     // 3. 启动“喜加一”自动播报任务
-    scheduleXXHUpdate();
+    // scheduleXXHUpdate(); // 坏了，这里先不开
 
     // 4. 初始化游戏列表并启动每日定时更新
     try {

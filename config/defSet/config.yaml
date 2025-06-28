@@ -31,5 +31,5 @@ inventoryMonitorEnabled: true
 inventoryMonitorInterval: 120000
 
 # true: 开启，会显示头像框
-# false: 关闭，不显示头像框，速度更快
+# false: 关闭，不显示头像框，速度更快(ps: 也不会快多少就是了)
 enableAvatarFrame: true

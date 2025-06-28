@@ -1,7 +1,7 @@
 // apps/SteamGameList.js
 import { karin, logger, segment } from 'node-karin';
 import { getSteamIdByQQ } from '../lib/db/databaseOps.js';
-import { getSteamID } from '../lib/main/FriendCode.js';
+import { getValidatedSteamUser } from '../lib/main/FriendCode.js';
 import { renderLibraryImage } from '../lib/main/SteamInventory.js';
 
 // 指令：#查询steam库存 用户ID
@@ -11,7 +11,7 @@ export const steamLibraryCommand = karin.command(
         const playerIdentifier = e.msg.replace(/^#查询[Ss]team库存\s*/, '').trim();
         logger.log(`[steamLibraryCommand] 收到指令, 输入: ${playerIdentifier}`);
         try {
-            const steamUserId = await getSteamID(playerIdentifier);
+            const steamUserId = await getValidatedSteamUser(playerIdentifier);
             logger.log(`[steamLibraryCommand] 获取到 SteamID: ${steamUserId}`);
 
             e.reply("正在生成您的库存图片，请稍候...", true);

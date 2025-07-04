@@ -40,7 +40,7 @@ export const joinSteamGroup = karin.command(
   },
   {
     name: 'join_steam_group_alias',
-    desc: '将已绑定的Steam账号（可指定别名）加入群监控',
+    desc: '将自己绑定的Steam账号加入当前群聊的播报列表',
     priority: 1000,
     permission: 'all'
   }
@@ -81,7 +81,7 @@ export const leaveSteamGroup = karin.command(
   },
   {
     name: 'leave_steam_group_alias',
-    desc: '将已绑定的Steam账号（可指定别名）从群监控移除',
+    desc: '将自己绑定的Steam账号从当前群聊的播报列表移除',
     priority: 1000,
     permission: 'all'
   }

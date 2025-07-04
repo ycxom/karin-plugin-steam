@@ -155,7 +155,7 @@ export const unbindSteamAccount = karin.command(
   },
   {
     name: 'unbind_steam_flexible',
-    desc: '通过别名/用户名/ID解绑Steam账号',
+    desc: '解绑已绑定的Steam账号，可使用别名/用户名/ID',
     priority: 1000,
     permission: 'all'
   }
@@ -177,7 +177,7 @@ export const setDefaultAccount = karin.command(
   },
   {
     name: 'set_default_steam',
-    desc: '设置默认的Steam账号',
+    desc: '将已绑定的某个别名设为默认查询账号',
     priority: 1000,
     permission: 'all'
   }

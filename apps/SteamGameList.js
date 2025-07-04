@@ -51,7 +51,12 @@ export const queryPublicOrMyLibraryCommand = karin.command(
             e.reply(`获取Steam游戏库信息时发生错误: ${error.message}`);
         }
     },
-    { name: 'query_public_or_my_library', priority: 1001, permission: 'everyone' }
+    {
+        name: 'query_public_or_my_library',
+        desc: '查询自己或他人的游戏库详情，可使用ID/别名',
+        priority: 1001,
+        permission: 'everyone'
+    }
 );
 
 // #查看Steam库存 @QQ号 [别名] - 用于查询他人
@@ -93,7 +98,12 @@ export const queryUserLibraryCommand = karin.command(
             e.reply('查询失败，请稍后再试');
         }
     },
-    { name: 'query_user_library', priority: 1000, permission: 'all' }
+    {
+        name: 'query_user_library',
+        desc: '通过@查询群内其他用户的Steam游戏库详情',
+        priority: 1000,
+        permission: 'all'
+    }
 );
 
 export default [

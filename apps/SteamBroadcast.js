@@ -26,7 +26,7 @@ export const startSteamBroadcast = karin.command(
   },
   {
     name: 'start_steam_broadcast',
-    desc: '启动本群Steam播报功能',
+    desc: '在本群开启Steam好友上下线及游戏状态通知',
     priority: 1000,
     permission: 'admin'
   }
@@ -52,7 +52,7 @@ export const stopSteamBroadcast = karin.command(
   },
   {
     name: 'stop_steam_broadcast',
-    desc: '关闭本群Steam播报功能',
+    desc: '在本群关闭Steam好友上下线及游戏状态通知',
     priority: 1000,
     permission: 'admin'
   }
@@ -69,7 +69,7 @@ export const enableSteamBroadcastFeature = karin.command(
   },
   {
     name: 'enable_steam_broadcast_feature',
-    desc: '全局启用Steam播报（主人）',
+    desc: '（主人）全局启用所有群的Steam状态播报功能',
     priority: 1000,
     permission: 'master',
     event: 'message.group'
@@ -87,7 +87,7 @@ export const disableSteamBroadcastFeature = karin.command(
   },
   {
     name: 'disable_steam_broadcast_feature',
-    desc: '全局禁用Steam播报（主人）',
+    desc: '（主人）全局禁用所有群的Steam状态播报功能',
     priority: 1000,
     permission: 'master'
   }

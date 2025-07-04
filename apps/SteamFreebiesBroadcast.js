@@ -51,6 +51,7 @@ export const startSteamFreebiesBroadcast = karin.command(
     },
     {
         name: 'start_steam_freebies_broadcast',
+        desc: '（管理员）在本群开启Steam免费游戏（喜加一）自动通知',
         priority: 1000,
         permission: 'admin' // 只有管理员才能执行此命令
     }
@@ -73,6 +74,7 @@ export const stopSteamFreebiesBroadcast = karin.command(
     },
     {
         name: 'stop_steam_freebies_broadcast',
+        desc: '（管理员）在本群关闭Steam免费游戏（喜加一）自动通知',
         priority: 1000,
         permission: 'admin' // 只有管理员才能执行此命令
     }

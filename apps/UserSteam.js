@@ -51,7 +51,12 @@ export const queryUserSteam = karin.command(
       return e.reply('查询失败，请稍后再试');
     }
   },
-  { name: 'queryUserSteam', priority: 1002, permission: 'all' } // 提高优先级以确保它在更具体的命令之前检查
+  {
+    name: 'queryUserSteam',
+    desc: '通过@用户 查询其绑定的Steam账号状态',
+    priority: 1002,
+    permission: 'all'
+  } // 提高优先级以确保它在更具体的命令之前检查
 );
 
 // #查看Steam好友 [@用户] [别名]
@@ -98,7 +103,12 @@ export const queryUserSteamFriends = karin.command(
       return e.reply('查询失败，请稍后再试');
     }
   },
-  { name: 'queryUserSteamFriends', priority: 1001, permission: 'all' }
+  {
+    name: 'queryUserSteamFriends',
+    desc: '通过@用户 查询其绑定的Steam好友列表',
+    priority: 1001,
+    permission: 'all'
+  }
 );
 
 // 查询绑定列表命令

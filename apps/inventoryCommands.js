@@ -27,7 +27,7 @@ export const enableMyInventoryMonitoring = karin.command(
     },
     {
         name: 'enable_my_inventory_monitoring_alias',
-        desc: '开启自己的Steam库存变更播报，可指定别名或不指定(全体)',
+        desc: '开启自己Steam游戏库新增游戏的通知（可指定别名）',
         permission: 'all',
     }
 );
@@ -56,7 +56,7 @@ export const disableMyInventoryMonitoring = karin.command(
     },
     {
         name: 'disable_my_inventory_monitoring_alias',
-        desc: '关闭自己的Steam库存变更播报，可指定别名或不指定(全体)',
+        desc: '关闭自己Steam游戏库新增游戏的通知（可指定别名）',
         permission: 'all',
     }
 );

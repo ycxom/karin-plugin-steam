@@ -29,7 +29,7 @@ export const steamFreebies = karin.command(
     },
     {
         name: 'steam_freebies',
-        desc: '获取最新的Steam免费游戏信息',
+        desc: '获取当前可领取的Steam免费游戏（喜加一）信息',
         priority: 1000,
         permission: 'everyone'
     }

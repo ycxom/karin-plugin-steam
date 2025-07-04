@@ -56,7 +56,7 @@ export const querySteamStatus = karin.command(
   },
   {
     name: 'query_steam_status_alias',
-    desc: '查询指定别名或ID的Steam用户状态，不指定则查默认账号',
+    desc: '查询自己或他人的Steam状态，可@用户或使用ID/别名',
     priority: 1001, // 优先级略低于更具体的命令
     permission: 'all'
   }
@@ -101,7 +101,7 @@ export const queryMySteam = karin.command(
   },
   {
     name: 'query_my_steam_alias',
-    desc: '查看已绑定的Steam信息，可指定别名',
+    desc: '查看自己绑定的默认或指定别名的Steam账号状态',
     priority: 1001, // 优先级略低于更具体的命令
     permission: 'all'
   }
@@ -134,7 +134,7 @@ export const querySteamFriends = karin.command(
   },
   {
     name: 'query_steam_friends_alias',
-    desc: '查询指定别名或ID的Steam好友，不指定则查默认账号',
+    desc: '截图查询自己或他人的Steam好友列表',
     priority: 1000,
     permission: 'all'
   }
@@ -175,7 +175,7 @@ export const queryMySteamFriends = karin.command(
   },
   {
     name: 'query_my_steam_friends_alias',
-    desc: '查看自己Steam好友列表，可指定别名',
+    desc: '查看自己绑定的默认或指定别名的Steam好友列表',
     priority: 1000,
     permission: 'all'
   }

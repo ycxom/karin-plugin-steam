@@ -32,7 +32,7 @@ export const toggleMyGroupSteamBroadcast = karin.command(
     },
     {
         name: 'toggle_my_group_steam_broadcast_alias',
-        desc: '开启或关闭在本群的个人Steam状态播报，可指定别名或不指定（全体）',
+        desc: '开启/关闭 ‘我’的Steam状态变化在本群的通知（可指定别名）',
         permission: 'all',
     }
 );
@@ -62,7 +62,7 @@ export const toggleMyGroupInventoryBroadcast = karin.command(
     },
     {
         name: 'toggle_my_group_inventory_broadcast_alias',
-        desc: '开启或关闭在本群的个人Steam库更新播报，可指定别名或不指定（全体）',
+        desc: '开启/关闭 ‘我’的游戏库新增在本群的通知（可指定别名）',
         permission: 'all',
     }
 );
@@ -91,7 +91,7 @@ export const toggleAllMySteamBroadcast = karin.command(
     },
     {
         name: 'toggle_all_my_steam_broadcast_alias',
-        desc: '开启或关闭在所有群的个人Steam状态播报，可指定别名或不指定（全体）',
+        desc: '（总开关）开启/关闭 ‘我’在所有群的状态播报（可指定别名）',
         permission: 'all',
     }
 );
@@ -120,7 +120,7 @@ export const toggleAllMyInventoryBroadcast = karin.command(
     },
     {
         name: 'toggle_all_my_inventory_broadcast_alias',
-        desc: '开启或关闭在所有群的个人Steam库更新播报，可指定别名或不指定（全体）',
+        desc: '（总开关）开启/关闭 ‘我’在所有群的库存播报（可指定别名）',
         permission: 'all',
     }
 );

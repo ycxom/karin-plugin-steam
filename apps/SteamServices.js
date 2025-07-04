@@ -40,7 +40,7 @@ export const steamCharts = karin.command(
   },
   {
     name: 'steam_charts',
-    desc: 'Steam排行榜截图',
+    desc: '查看Steam当前热门游戏排行榜',
     priority: 1000,
     permission: 'all'
   }

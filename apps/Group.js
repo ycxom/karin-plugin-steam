@@ -1,70 +1,92 @@
 // apps/Group.js
 import { karin, segment, logger } from 'node-karin';
-import { getSteamIdByQQ, addSteamIdToGroup, removeSteamIdFromGroup, getSteamIdsInGroup } from '../lib/db/databaseOps.js';
+import { getBoundAccountByAlias, getDefaultSteamIdByQQ, addSteamIdToGroup, removeSteamIdFromGroup, getSteamIdsInGroup } from '../lib/db/databaseOps.js';
 import { fetchPlayersSummariesAPI, fetchPlayerProfileAPI } from '../lib/main/fetchSteamStatus.js';
 import { generateSteamUI } from '../lib/common/generateSteamUI.js';
 import { debuglog } from '../lib/debuglog.js';
 
-/**
- * #steam加入群聊
- */
 export const joinSteamGroup = karin.command(
-  /^#[Ss]team加入群聊$/,
+  /^#[Ss]team加入群聊/,
   async (e) => {
-    const qq = e.sender.userId
+    const qq = e.sender.userId;
     const groupId = String(e.groupId);
-    const steamID = await getSteamIdByQQ(qq);
-    debuglog(`{steamID}: ${steamID}, QQ: ${qq}, Group ID: ${groupId}`);
-    if (!steamID) {
-      return e.reply('请先绑定 Steam 账号，再加入群聊。');
+    // 从消息字符串中直接解析参数，更稳定
+    const alias = e.msg.replace(/^#[Ss]team加入群聊\s*/, '').trim() || null;
+    let steamID;
+    let targetAlias;
+
+    if (alias) {
+      const account = await getBoundAccountByAlias(qq, alias);
+      if (!account) {
+        return e.reply(`未找到别名为 "${alias}" 的绑定。`);
+      }
+      steamID = account.steam_id;
+      targetAlias = alias;
+    } else {
+      steamID = await getDefaultSteamIdByQQ(qq);
+      if (!steamID) {
+        return e.reply('请先绑定 Steam 账号并设置默认账号，或指定一个别名。');
+      }
+      targetAlias = '默认账号';
     }
+
     try {
-      await addSteamIdToGroup(groupId, steamID); // 推荐加 await
-      return e.reply(`成功将 Steam ID ${steamID} 加入群聊 ${groupId}`);
+      await addSteamIdToGroup(groupId, steamID);
+      return e.reply(`成功将您的Steam账号（${targetAlias}）加入本群监控列表。`);
     } catch (error) {
       logger.error('加入群聊失败:', error);
       return e.reply('加入群聊失败，请稍后再试。');
     }
   },
   {
-    name: 'join_steam_group',
-    desc: '将已绑定Steam账号加入群Steam成员列表',
+    name: 'join_steam_group_alias',
+    desc: '将已绑定的Steam账号（可指定别名）加入群监控',
     priority: 1000,
     permission: 'all'
   }
 );
 
-/**
- * #steam退出群聊
- */
 export const leaveSteamGroup = karin.command(
-  /^#[Ss]team退出群聊$/,
+  /^#[Ss]team退出群聊/,
   async (e) => {
     const qq = e.sender.userId;
     const groupId = String(e.groupId);
-    const steamID = await getSteamIdByQQ(qq);
-    if (!steamID) {
-      return e.reply('您尚未绑定 Steam 账号。');
+    // 从消息字符串中直接解析参数
+    const alias = e.msg.replace(/^#[Ss]team退出群聊\s*/, '').trim() || null;
+    let steamID;
+    let targetAlias;
+
+    if (alias) {
+      const account = await getBoundAccountByAlias(qq, alias);
+      if (!account) {
+        return e.reply(`未找到别名为 "${alias}" 的绑定。`);
+      }
+      steamID = account.steam_id;
+      targetAlias = alias;
+    } else {
+      steamID = await getDefaultSteamIdByQQ(qq);
+      if (!steamID) {
+        return e.reply('您尚未绑定Steam账号或未设置默认账号，请指定一个别名。');
+      }
+      targetAlias = '默认账号';
     }
+
     try {
       await removeSteamIdFromGroup(groupId, steamID);
-      return e.reply(`成功将 Steam ID ${steamID} 从群聊 ${groupId} 中移除`);
+      return e.reply(`成功将您的Steam账号（${targetAlias}）从本群监控列表中移除。`);
     } catch (error) {
       logger.error('退出群聊失败:', error);
       return e.reply('退出群聊失败，请稍后再试。');
     }
   },
   {
-    name: 'leave_steam_group',
-    desc: '将已绑定Steam账号从群成员移除',
+    name: 'leave_steam_group_alias',
+    desc: '将已绑定的Steam账号（可指定别名）从群监控移除',
     priority: 1000,
     permission: 'all'
   }
 );
 
-/**
- * #查看群聊steam (已优化)
- */
 export const querySteamGroup = karin.command(
   /^#查看群聊[Ss]team$/,
   async (e) => {
@@ -72,19 +94,17 @@ export const querySteamGroup = karin.command(
     try {
       const steamIDs = await getSteamIdsInGroup(groupId);
       if (!steamIDs || steamIDs.length === 0) {
-        return e.reply(`群聊 ${groupId} 中没有绑定任何 Steam ID`);
+        return e.reply(`本群中没有绑定任何 Steam ID`);
       }
 
-      // 1. 使用新API批量获取用户信息
       const playersSummaries = await fetchPlayersSummariesAPI(steamIDs);
       if (playersSummaries.size === 0) {
-        return e.reply(`群聊 ${groupId} 中未能获取到任何有效的 Steam 状态。`);
+        return e.reply(`本群中未能获取到任何有效的 Steam 状态。`);
       }
 
       const steamStatuses = [];
       const profilePromises = [];
 
-      // 2. 准备并行获取头像框等详细信息
       for (const steamID of steamIDs) {
         if (playersSummaries.has(steamID)) {
           profilePromises.push(
@@ -96,7 +116,6 @@ export const querySteamGroup = karin.command(
       const profiles = await Promise.all(profilePromises);
       const profileMap = new Map(profiles.map(p => [p.steamID, p.profile]));
 
-      // 3. 构建UI所需的数据结构
       for (const steamID of steamIDs) {
         const summary = playersSummaries.get(steamID);
         if (!summary) continue;
@@ -126,17 +145,16 @@ export const querySteamGroup = karin.command(
           profileStatus: profileStatusText,
           profileInGameName: summary.gameextrainfo || '',
           playerAvatarImg: summary.avatarfull,
-          frameImg: profile ? profile.frameImg : null, // 使用 fetchPlayerProfileAPI 获取的数据
+          frameImg: profile ? profile.frameImg : null,
           profileStatusClass: profileStatusClass,
           steamid: steamID
         });
       }
 
       if (steamStatuses.length === 0) {
-        return e.reply(`群聊 ${groupId} 中未能获取到任何有效的 Steam 状态。`);
+        return e.reply(`本群中未能获取到任何有效的 Steam 状态。`);
       }
 
-      // 4. 生成并发送图片
       const base64Image = await generateSteamUI(steamStatuses);
       return e.reply(segment.image(`base64://${base64Image}`));
     } catch (error) {
@@ -152,8 +170,6 @@ export const querySteamGroup = karin.command(
   }
 );
 
-
-// 推荐用默认导出多个命令数组
 export default [
   joinSteamGroup,
   leaveSteamGroup,

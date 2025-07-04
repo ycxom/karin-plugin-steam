@@ -32,7 +32,7 @@ export const steamUserLibraryCommand = karin.command(
     /^#查看[Ss]team库存$/,
     async (e) => {
         if (!e.at || e.at.length === 0) {
-            return; // 如果没有@人，则忽略，让 #查看我的steam库存 处理
+            return e.reply(`请@Ta使用`);
         }
         const qq = e.at[0];
         const steamID = await getSteamIdByQQ(qq);

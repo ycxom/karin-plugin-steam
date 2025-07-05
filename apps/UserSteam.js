@@ -1,23 +1,21 @@
-// apps/UserSteam.js
 import { karin, segment, logger } from 'node-karin';
 import { getBoundAccountByAlias, getDefaultSteamIdByQQ, getBoundAccountsByQQ } from '../lib/db/databaseOps.js';
 import { fetchSteamStatus, fetchPlayersSummariesAPI } from '../lib/main/fetchSteamStatus.js';
-import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js';
+import { screenshotSteamProfile } from '../lib/common/screenshot.js';
+import { renderFriendsListImage } from '../lib/main/friendsRenderer.js';
+import { getValidatedSteamUser } from '../lib/main/FriendCode.js';
 
 // #查看Steam [@用户] [别名]
 export const queryUserSteam = karin.command(
-  /#查看[Ss]team(?!\s*好友|\s*绑定|\s*库存)/, // 使用负向先行断言避免与其它命令冲突
+  /#查看[Ss]team(?!\s*好友|\s*绑定|\s*库存)/,
   async (e) => {
-    // 此命令只在 @ 某人时触发
     if (!e.at || e.at.length === 0) {
       return;
     }
 
     const targetQQ = e.at[0];
-    // 更健壮的别名解析方式
     const alias = e.msg
       .replace(/#查看[Ss]team\s*/, '')
-      .replace(/\[at:qq=\d+\]/g, '')
       .trim();
 
     let steamID = null;
@@ -53,10 +51,10 @@ export const queryUserSteam = karin.command(
   },
   {
     name: 'queryUserSteam',
-    desc: '通过@用户 查询其绑定的Steam账号状态',
+    desc: '查看自己或@他人已绑定的所有Steam',
     priority: 1002,
     permission: 'all'
-  } // 提高优先级以确保它在更具体的命令之前检查
+  }
 );
 
 // #查看Steam好友 [@用户] [别名]
@@ -70,7 +68,6 @@ export const queryUserSteamFriends = karin.command(
     const targetQQ = e.at[0];
     const alias = e.msg
       .replace(/#查看[Ss]team好友\s*/, '')
-      .replace(/\[at:qq=\d+\]/g, '')
       .trim();
 
     let steamID = null;
@@ -89,23 +86,23 @@ export const queryUserSteamFriends = karin.command(
         }
       }
 
-      const result = await screenshotSteamFriends(steamID);
+      const steamUser = await getValidatedSteamUser(steamID);
+      // 如果获取失败，提供一个回退的名称
+      const steamNickname = steamUser ? steamUser.personaname : `玩家(ID:${steamID})`;
 
-      if (result.error) {
-        return e.reply(result.error);
-      } else if (result.image) {
-        return e.reply(segment.image(`base64://${result.image}`));
-      } else {
-        return e.reply('未能生成Steam好友截图');
-      }
+      e.reply(`正在获取 Steam 用户【${steamNickname}】的好友列表，请稍候...`, true);
+
+      const base64Image = await renderFriendsListImage(steamID);
+      return e.reply(segment.image(`base64://${base64Image}`));
+
     } catch (error) {
       logger.error(`[queryUserSteamFriends] 查询QQ:${targetQQ} 好友情况出错:`, error);
-      return e.reply('查询失败，请稍后再试');
+      return e.reply(`查询好友列表失败：${error.message}`);
     }
   },
   {
     name: 'queryUserSteamFriends',
-    desc: '通过@用户 查询其绑定的Steam好友列表',
+    desc: '查看自己或@他人已绑定的所有Steam好友列表',
     priority: 1001,
     permission: 'all'
   }
@@ -152,7 +149,7 @@ export const queryBoundAccounts = karin.command(
   },
   {
     name: 'query_bound_steam_accounts',
-    desc: '查询自己或他人的Steam绑定列表',
+    desc: '查看自己或@他人已绑定的所有Steam账号列表',
     priority: 1000,
     permission: 'all'
   }
@@ -161,5 +158,5 @@ export const queryBoundAccounts = karin.command(
 export default [
   queryUserSteam,
   queryUserSteamFriends,
-  queryBoundAccounts // 将新命令添加到导出列表
+  queryBoundAccounts
 ];

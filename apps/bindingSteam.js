@@ -1,10 +1,11 @@
-// apps/bindingSteam.js (修复版)
 import { karin, segment, logger } from 'node-karin';
 import { getBoundAccountByAlias, getDefaultSteamIdByQQ } from '../lib/db/databaseOps.js';
 import { fetchSteamStatus } from '../lib/main/fetchSteamStatus.js';
-import { screenshotSteamProfile, screenshotSteamFriends } from '../lib/common/screenshot.js';
+import { screenshotSteamProfile } from '../lib/common/screenshot.js';
 import { renderLibraryImage } from '../lib/main/SteamInventory.js';
 import { getValidatedSteamUser } from '../lib/main/FriendCode.js';
+import { renderFriendsListImage } from '../lib/main/friendsRenderer.js';
+import { debuglog } from '../lib/debuglog.js';
 
 // 辅助函数，用于安全地获取目标 Steam ID
 async function getTargetSteamId(e, identifier) {
@@ -112,29 +113,29 @@ export const querySteamFriends = karin.command(
   /^#查询[Ss]team好友/,
   async (e) => {
     const playerIdentifier = e.msg.replace(/^#查询[Ss]team好友\s*/, '').trim() || null;
+
+    debuglog(`[querySteamFriends] 收到命令，原始标识符: "${playerIdentifier}"`);
+
     try {
+      e.reply('正在获取好友列表并生成图片，请稍候...', true);
       const targetId = await getTargetSteamId(e, playerIdentifier);
-      if (!targetId) return;
-
-      const validatedUser = await getValidatedSteamUser(targetId);
-      if (!validatedUser) {
-        return e.reply(`无法找到用户 "${targetId}" 或其个人资料为私密。`);
+      if (!targetId) {
+        debuglog(`[querySteamFriends] 无法从标识符 "${playerIdentifier}" 解析出目标ID。`);
+        return;
       }
 
-      const result = await screenshotSteamFriends(validatedUser.steamid);
-      if (result.error) {
-        return e.reply(result.error);
-      } else if (result.image) {
-        return e.reply(segment.image(`base64://${result.image}`));
-      }
+      debuglog(`[querySteamFriends] 解析出的目标ID: ${targetId}，准备调用渲染器。`);
+      const base64Image = await renderFriendsListImage(targetId);
+      return e.reply(segment.image(`base64://${base64Image}`));
+
     } catch (error) {
       logger.error('查询 Steam好友失败:', error);
-      return e.reply('查询失败，请稍后再试');
+      return e.reply(`查询好友列表失败：${error.message}`);
     }
   },
   {
     name: 'query_steam_friends_alias',
-    desc: '截图查询自己或他人的Steam好友列表',
+    desc: '图文展示指定别名或ID的Steam好友列表',
     priority: 1000,
     permission: 'all'
   }
@@ -148,34 +149,28 @@ export const queryMySteamFriends = karin.command(
     const qq = e.sender.userId;
     let steamID;
 
-    if (alias) {
-      const account = await getBoundAccountByAlias(qq, alias);
-      if (!account) {
-        return e.reply(`未找到别名为 "${alias}" 的绑定。`);
-      }
-      steamID = account.steam_id;
-    } else {
-      steamID = await getDefaultSteamIdByQQ(qq);
-      if (!steamID) {
-        return e.reply('未绑定Steam账号或未设置默认账号。请使用 `#绑定steam <ID> 别名 <别名>` 或指定别名。');
-      }
-    }
-
     try {
-      const result = await screenshotSteamFriends(steamID);
-      if (result.error) {
-        return e.reply(result.error);
-      } else if (result.image) {
-        return e.reply(segment.image(`base64://${result.image}`));
+      e.reply('正在获取您的好友列表并生成图片，请稍候...', true);
+      if (alias) {
+        const account = await getBoundAccountByAlias(qq, alias);
+        if (!account) return e.reply(`未找到别名为 "${alias}" 的绑定。`);
+        steamID = account.steam_id;
+      } else {
+        steamID = await getDefaultSteamIdByQQ(qq);
+        if (!steamID) return e.reply('未绑定Steam账号或未设置默认账号。');
       }
+
+      const base64Image = await renderFriendsListImage(steamID);
+      return e.reply(segment.image(`base64://${base64Image}`));
+
     } catch (error) {
       logger.error('查询自己Steam好友失败:', error);
-      return e.reply('查询失败，请稍后再试');
+      return e.reply(`查询好友列表失败：${error.message}`);
     }
   },
   {
     name: 'query_my_steam_friends_alias',
-    desc: '查看自己绑定的默认或指定别名的Steam好友列表',
+    desc: '图文展示自己绑定的Steam好友列表，可指定别名',
     priority: 1000,
     permission: 'all'
   }

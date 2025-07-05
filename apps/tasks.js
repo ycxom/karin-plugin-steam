@@ -9,11 +9,20 @@ import { startInventoryMonitoring } from '../lib/monitor/monitorInventory.js';
 import { initAppList, scheduleDailyUpdate } from '../lib/main/SteamInventory.js';
 import { scheduleXXHUpdate } from '../lib/common/xxhFree.js';
 import { debuglog } from '../lib/debuglog.js';
+import { dbReady } from '../lib/db/db.js';
 
 /**
  * 插件加载时执行所有初始化和任务调度
  */
 async function initializePluginTasks() {
+    try {
+        await dbReady;
+        logger.info('[Tasks] 数据库已成功初始化并通过迁移检查，开始启动后台任务...');
+    } catch (error) {
+        logger.error('[Tasks] 数据库初始化失败，后台任务将不会启动。错误:', error);
+        return; // 如果数据库失败，则不继续执行
+    }
+
     logger.info('[Karin-plugin-steam] 开始执行所有后台任务初始化...');
 
     // 1. 启动状态播报监控 (如果配置中开启)

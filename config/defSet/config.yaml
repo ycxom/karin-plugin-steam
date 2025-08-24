@@ -33,3 +33,16 @@ inventoryMonitorInterval: 120000
 # true: 开启，会显示头像框
 # false: 关闭，不显示头像框，速度更快(ps: 也不会快多少就是了)
 enableAvatarFrame: true
+
+# 截图相关配置
+screenshot:
+  # 页面加载超时时间（毫秒）
+  pageTimeout: 60000
+  # 截图超时时间（毫秒）
+  screenshotTimeout: 30000
+  # 字体加载超时时间（毫秒）
+  fontTimeout: 5000
+  # 截图失败重试次数
+  maxRetries: 2
+  # 重试间隔基数（毫秒），实际间隔为 retryInterval * 重试次数
+  retryInterval: 1000

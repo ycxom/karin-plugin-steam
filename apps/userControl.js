@@ -8,12 +8,12 @@ import {
 } from '../lib/db/databaseOps.js';
 
 export const toggleMyGroupSteamBroadcast = karin.command(
-    /^#(开启|关闭)本群我的steam播报/,
+    /^#(开启|关闭)本群我的[Ss]team播报/,
     async (e) => {
         const qqId = e.sender.userId;
         const groupId = e.groupId;
         const enabled = e.msg.includes('开启');
-        const alias = e.msg.replace(/^#(开启|关闭)本群我的steam播报\s*/, '').trim();
+        const alias = e.msg.replace(/^#(开启|关闭)本群我的[Ss]team播报\s*/, '').trim();
 
         const bindings = await getBoundAccountsByQQ(qqId);
         if (bindings.length === 0) {
@@ -38,12 +38,12 @@ export const toggleMyGroupSteamBroadcast = karin.command(
 );
 
 export const toggleMyGroupInventoryBroadcast = karin.command(
-    /^#(开启|关闭)本群我的steam库播报/,
+    /^#(开启|关闭)本群我的[Ss]team库播报/,
     async (e) => {
         const qqId = e.sender.userId;
         const groupId = e.groupId;
         const enabled = e.msg.includes('开启');
-        const alias = e.msg.replace(/^#(开启|关闭)本群我的steam库播报\s*/, '').trim();
+        const alias = e.msg.replace(/^#(开启|关闭)本群我的[Ss]team库播报\s*/, '').trim();
 
         const bindings = await getBoundAccountsByQQ(qqId);
         if (bindings.length === 0) {
@@ -68,11 +68,11 @@ export const toggleMyGroupInventoryBroadcast = karin.command(
 );
 
 export const toggleAllMySteamBroadcast = karin.command(
-    /^#(开启|关闭)全部我的steam播报/,
+    /^#(开启|关闭)全部我的[Ss]team播报/,
     async (e) => {
         const qqId = e.sender.userId;
         const enabled = e.msg.includes('开启');
-        const alias = e.msg.replace(/^#(开启|关闭)全部我的steam播报\s*/, '').trim();
+        const alias = e.msg.replace(/^#(开启|关闭)全部我的[Ss]team播报\s*/, '').trim();
 
         const bindings = await getBoundAccountsByQQ(qqId);
         if (bindings.length === 0) {
@@ -97,11 +97,11 @@ export const toggleAllMySteamBroadcast = karin.command(
 );
 
 export const toggleAllMyInventoryBroadcast = karin.command(
-    /^#(开启|关闭)全部我的steam库播报/,
+    /^#(开启|关闭)全部我的[Ss]team库播报/,
     async (e) => {
         const qqId = e.sender.userId;
         const enabled = e.msg.includes('开启');
-        const alias = e.msg.replace(/^#(开启|关闭)全部我的steam库播报\s*/, '').trim();
+        const alias = e.msg.replace(/^#(开启|关闭)全部我的[Ss]team库播报\s*/, '').trim();
 
         const bindings = await getBoundAccountsByQQ(qqId);
         if (bindings.length === 0) {

@@ -6,9 +6,9 @@ import { fetchPlayersSummariesAPI } from '../lib/main/fetchSteamStatus.js';
 
 // 绑定命令
 export const bindSteamAccount = karin.command(
-  /^#(?:绑定steam|steam绑定)/,
+  /^#(?:绑定[Ss]team|[Ss]team绑定)/,
   async (e) => {
-    const argsStr = e.msg.replace(/^#(?:绑定steam|steam绑定)\s*/, '').trim();
+    const argsStr = e.msg.replace(/^#(?:绑定[Ss]team|[Ss]team绑定)\s*/, '').trim();
 
     if (!argsStr) {
       return e.reply('请提供要绑定的SteamID、好友代码或自定义URL。\n用法: `#绑定steam <ID> [别名 <别名>]`\n如果未提供别名，将使用您的Steam用户名作为别名。');
@@ -92,10 +92,10 @@ export const bindSteamAccount = karin.command(
 
 // 解绑命令
 export const unbindSteamAccount = karin.command(
-  /^#(?:解绑steam|steam解绑)/,
+  /^#(?:解绑[Ss]team|[Ss]team解绑)/,
   async (e) => {
     const qq = e.sender.userId;
-    const identifier = e.msg.replace(/^#(?:解绑steam|steam解绑)\s*/, '').trim();
+    const identifier = e.msg.replace(/^#(?:解绑[Ss]team|[Ss]team解绑)\s*/, '').trim();
 
     const accounts = await getBoundAccountsByQQ(qq);
     if (accounts.length === 0) {
@@ -162,7 +162,7 @@ export const unbindSteamAccount = karin.command(
 );
 
 export const setDefaultAccount = karin.command(
-  /^#(?:设置默认steam|steam默认设置)\s+([^\s]+)$/,
+  /^#(?:设置默认[Ss]team|[Ss]team默认设置)\s+([^\s]+)$/,
   async (e) => {
     const qq = e.sender.userId;
     const alias = e.regMatch[1];
